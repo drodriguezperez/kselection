@@ -23,4 +23,7 @@ dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
 sol <- kselection(dat)
 k   <- num_clusters(sol)
 }
+\seealso{
+\code{\link{get_f_k}}
+}
 

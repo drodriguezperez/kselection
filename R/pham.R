@@ -26,7 +26,8 @@
 #' @param x numeric matrix of data, or an object that can be coerced to such a
 #'        matrix.
 #' @param max_centers maximum number of clusters for evaluation.
-#' @param k_threshold cluster selection threshold for f(k) value.
+#' @param k_threshold maximum f(k) from which it can not consider the existence
+#'        of more than one cluster in the data set. The default value is 0.85.
 #' @param iter.max the maximum number of iterations allowed.
 #' @param nstart if centers is a number, how many random sets should be chosen?
 #' @param trace show a progress bar
@@ -54,11 +55,16 @@
 #' k   <- num_clusters(sol) # optimal number of clustes
 #' f_k <- get_f_k(sol)      # the f(k) vector
 #' 
+#' # Plot the results
+#' plot(sol)
+#' 
 #' @author Daniel Rodriguez Perez
 #' 
 #' @references
 #' D T Pham, S S Dimov, and C D Nguyen "Selection of k in k-means clustering",
 #' Mechanical Engineering Science, 2004, pp. 103-119.
+#' 
+#' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
 #' 
 #' @import tools
 #' 
@@ -144,8 +150,7 @@ kselection <- function(x,
 #' sol <- kselection(dat)
 #' f_k <- get_f_k(sol)
 #' 
-#' # Plot the results
-#' plot(sol)
+#' @seealso \code{\link{num_clusters}},
 #' 
 #' @rdname get_f_k
 #' @export get_f_k
@@ -181,6 +186,8 @@ get_f_k.Kselection <- function(obj) {
 #' # Get the optimal number of clustes
 #' sol <- kselection(dat)
 #' k   <- num_clusters(sol)
+#' 
+#' @seealso \code{\link{get_f_k}}
 #' 
 #' @rdname num_clusters
 #' @export num_clusters

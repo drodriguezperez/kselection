@@ -22,8 +22,8 @@ dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
 # Get the f(k) vector
 sol <- kselection(dat)
 f_k <- get_f_k(sol)
-
-# Plot the results
-plot(sol)
+}
+\seealso{
+\code{\link{num_clusters}},
 }
 

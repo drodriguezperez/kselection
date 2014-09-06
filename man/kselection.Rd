@@ -12,7 +12,8 @@ matrix.}
 
 \item{max_centers}{maximum number of clusters for evaluation.}
 
-\item{k_threshold}{cluster selection threshold for f(k) value.}
+\item{k_threshold}{maximum f(k) from which it can not consider the existence
+of more than one cluster in the data set. The default value is 0.85.}
 
 \item{iter.max}{the maximum number of iterations allowed.}
 
@@ -46,6 +47,9 @@ sol <- kselection(dat)
 # Get the results
 k   <- num_clusters(sol) # optimal number of clustes
 f_k <- get_f_k(sol)      # the f(k) vector
+
+# Plot the results
+plot(sol)
 }
 \author{
 Daniel Rodriguez Perez
@@ -53,5 +57,8 @@ Daniel Rodriguez Perez
 \references{
 D T Pham, S S Dimov, and C D Nguyen "Selection of k in k-means clustering",
 Mechanical Engineering Science, 2004, pp. 103-119.
+}
+\seealso{
+\code{\link{num_clusters}}, \code{\link{get_f_k}}
 }
 
