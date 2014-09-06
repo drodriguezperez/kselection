@@ -31,7 +31,28 @@
 #' @param nstart if centers is a number, how many random sets should be chosen?
 #' @param trace show a progress bar
 #' 
-#' @return an array with f(k) metric
+#' @return an object with the f(k) results
+#' 
+#' @details
+#' This function implements the method for selecting the number of clusters for
+#' the algorithm K-means introduced in the publication of Pham, Dimov and
+#' Nguyen of 2004.
+#' 
+#' The method introduce a function f(k) to evaluate the quality of the
+#' resulting clustering. The values of k which yield small values of f(k) can
+#' be considered to produce well-defined clusters.
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'
+#' # Ejecute the method
+#' sol <- kselection(dat)
+#' 
+#' # Get the results
+#' k   <- num_clusters(sol) # optimal number of clustes
+#' f_k <- get_f_k(sol)      # the f(k) vector
 #' 
 #' @author Daniel Rodriguez Perez
 #' 
@@ -95,12 +116,53 @@ kselection <- function(x,
     }
   }
   
-  result <- list(k    = which_cluster(f_k, k_threshold),
-                 f_k  = f_k,
-                 s_k  = s_k)
+  result <- list(k           = which_cluster(f_k, k_threshold),
+                 f_k         = f_k,
+                 max_centers = max_centers,
+                 k_threshold = k_threshold,
+                 iter.max    = iter.max,
+                 nstart      = nstart)
   class(result) <- 'Kselection'
   
   return(result)
+}
+
+#' Get the f(k) vector
+#' 
+#' Get the f(k) vector
+#' 
+#' @param obj the output of kselection function
+#' 
+#' @return the vector of f(k) function
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'               
+#' # Get the f(k) vector
+#' sol <- kselection(dat)
+#' f_k <- get_f_k(sol)
+#' 
+#' # Plot the results
+#' plot(sol)
+#' 
+#' @rdname get_f_k
+#' @export get_f_k
+get_f_k <- function(obj) {
+  UseMethod("get_f_k")
+}
+
+#' @method get_f_k default
+#' @export
+get_f_k.default <- function(obj) {
+  NULL
+}
+
+#' @method get_f_k Kselection
+#' @export
+get_f_k.Kselection <- function(obj) {
+  obj$f_k
 }
 
 #' Get the number of clusters
@@ -108,6 +170,17 @@ kselection <- function(x,
 #' Get the number of clusters
 #' 
 #' @param obj the output of kselection function
+#' 
+#' @return the number of clusters
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'               
+#' # Get the optimal number of clustes
+#' sol <- kselection(dat)
+#' k   <- num_clusters(sol)
 #' 
 #' @rdname num_clusters
 #' @export num_clusters
@@ -132,6 +205,7 @@ num_clusters.Kselection <- function(obj) {
 plot.Kselection <- function(x, ...) {
   max_y <- 1.1 * max(x$f_k)
   plot(x$f_k,
+       type = 'b',
        xlab = 'Number of clusters k',
        ylab = 'f(k)',
        ylim = c(0, max_y))
@@ -139,8 +213,8 @@ plot.Kselection <- function(x, ...) {
 
 #' @method plot Kselection
 #' @export
-print.Kselection <- function(obj) {
-  cat('The f(k) function finds', obj$k, 'clusters')
+print.Kselection <- function(x, ...) {
+  cat('f(k) finds', num_clusters(x), 'clusters')
 }
 
 # Calculate the weight factor for kselection
@@ -164,6 +238,16 @@ alpha_k <- function(n_d, k) {
   return(result)
 }
 
+# Calculate the optimal cluster for kselection
+#
+# Calculate the optimal cluster for kselection
+#
+# @param f_k the f(k) array
+# @param k_threshold cluster selection threshold for f(k) value.
+#
+# @return the number of clusters
+# 
+# @author Daniel Rodriguez Perez
 which_cluster <- function(f_k, k_threshold) {
   k <- which(f_k == min(f_k) & f_k < k_threshold)
   if (length(k) == 0)

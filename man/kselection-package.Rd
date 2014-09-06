@@ -2,12 +2,16 @@
 \docType{package}
 \name{kselection-package}
 \alias{kselection-package}
-\title{kselection: Selection of k in k-means clustering}
+\title{Selection of k in k-means clustering}
 \description{
 Selection of k in k-means clustering based on Pham et al. paper ``Selection
 of k in k-means clustering''
 }
 \details{
+This package implements the method for selecting the number of clusters for
+the algorithm K-means introduced in the publication of Pham, Dimov and
+Nguyen of 2004.
+
 \tabular{ll}{
   Package: \tab kselection \cr
   Version: \tab 0.1.0 \cr

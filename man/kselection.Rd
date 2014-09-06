@@ -21,10 +21,31 @@ matrix.}
 \item{trace}{show a progress bar}
 }
 \value{
-an array with f(k) metric
+an object with the f(k) results
 }
 \description{
 Selection of k in k-means clustering based on Pham et al. paper
+}
+\details{
+This function implements the method for selecting the number of clusters for
+the algorithm K-means introduced in the publication of Pham, Dimov and
+Nguyen of 2004.
+
+The method introduce a function f(k) to evaluate the quality of the
+resulting clustering. The values of k which yield small values of f(k) can
+be considered to produce well-defined clusters.
+}
+\examples{
+# Create a data set with two clusters
+dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+                rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+
+# Ejecute the method
+sol <- kselection(dat)
+
+# Get the results
+k   <- num_clusters(sol) # optimal number of clustes
+f_k <- get_f_k(sol)      # the f(k) vector
 }
 \author{
 Daniel Rodriguez Perez
