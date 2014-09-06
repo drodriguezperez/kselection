@@ -1,0 +1,4 @@
+kselection.Rproj
+README.md
+^.*\.Rproj$
+^\.Rproj\.user$
