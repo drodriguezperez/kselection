@@ -227,16 +227,26 @@ num_clusters.Kselection <- function(obj) {
 #' @method plot Kselection
 #' @export
 plot.Kselection <- function(x, ...) {
-  max_y <- 1.1 * max(x$f_k)
+  max_y   <- 1.1 * max(x$f_k)
+  valid_k <- x$f_k < x$k_threshold
+  
   plot(x$f_k,
        type = 'b',
        xlab = 'Number of clusters k',
        ylab = 'f(k)',
        ylim = c(0, max_y))
   lines(x$k, x$f_k[x$k],
-        col  = 'red',
+        col  = 'green',
         pch  = 19,
-        type = 'p') 
+        type = 'p')
+  if (any(valid_k)) {
+    lines(which(valid_k), x$f_k[valid_k],
+          col  = 'green',
+          type = 'p')
+    legend('topright', c('Lower f(K)', 'Valid K'),
+           col = c('green','green'),
+           pch = c(19, 1))
+  }
 }
 
 #' @method print Kselection
