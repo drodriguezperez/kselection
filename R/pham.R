@@ -233,7 +233,7 @@ plot.Kselection <- function(x, ...) {
        xlab = 'Number of clusters k',
        ylab = 'f(k)',
        ylim = c(0, max_y))
-  lines(k, x$f_k[x$k],
+  lines(x$k, x$f_k[x$k],
         col  = 'red',
         pch  = 19,
         type = 'p') 
