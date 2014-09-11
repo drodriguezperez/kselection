@@ -28,20 +28,44 @@
 #' @param max_centers maximum number of clusters for evaluation.
 #' @param k_threshold maximum f(k) from which it can not consider the existence
 #'        of more than one cluster in the data set. The default value is 0.85.
-#' @param iter.max the maximum number of iterations allowed.
-#' @param nstart if centers is a number, how many random sets should be chosen?
 #' @param trace show a progress bar
+#' @param ... arguments to be passed to the kmeans method
 #' 
 #' @return an object with the f(k) results
 #' 
 #' @details
-#' This function implements the method for selecting the number of clusters for
-#' the algorithm K-means introduced in the publication of Pham, Dimov and
-#' Nguyen of 2004.
+#' This function implements the method proposed by Pham, Dimov and Nguyen for
+#' selecting the number of clusters for the K-means algorithm. In this method
+#' a function \eqn{f(K)} is used to evaluate the quality of the resulting
+#' clustering and help decide on the optimal value of \eqn{K} for each data
+#' set. The \eqn{f(K)} function is defined as
+#' \deqn{f(K) = \left\{
+#' \begin{array}{rl}
+#'  1 & \mbox{if $K = 1$} \\
+#'  \frac{S_K}{\alpha_K S_{K-1}} & \mbox{if $S_{K-1} \ne 0$, $\forall K >1$} \\
+#'  1 & \mbox{if $S_{K-1} = 0$, $\forall K >1$}
+#' \end{array} \right.}{f(K) =
+#'  1, if K = 1;
+#'  (S_K)/(\alpha_K S_{K-1}, if S_{K-1} \ne 0, forall K >1;
+#'  1, if S_{K-1} = 0, forall K > 1}
+#' where \eqn{S_K} is the sum of the distortion of all cluster and \eqn{\alpha_K}
+#' is a weight factor which is defined as
+#' \deqn{\alpha_K = \left\{
+#' \begin{array}{rl}
+#'  1 - \frac{3}{4 N_d}                        & \mbox{if $K = 1$ and $N_d > 1$} \\
+#'  \alpha_{K-1} + \frac{1 - \alpha_{K-1}}{6}  & \mbox{if $K > 2$ and $N_d > 1$}
+#' \end{array} \right.}{\alpha_K = 
+#'  1 - 3/(4 * N_d), if K = 1 and N_d > 1;
+#'  \alpha_{K-1} + (1 - \alpha_{K-1})/6, if K > 2 and N_d > 1}
+#' where \eqn{N_d} is the number of dimensions of the data set.
 #' 
-#' The method introduce a function f(k) to evaluate the quality of the
-#' resulting clustering. The values of k which yield small values of f(k) can
-#' be considered to produce well-defined clusters.
+#' In this definition \eqn{f(K)} is the ratio of the real distortion to the
+#' estimated distortion and decreases when there are areas of concentration in
+#' the data distribution.
+#' 
+#' The values of \eqn{K} that yield \eqn{f(K) < 0.85} can be recommended for
+#' clustering. If there is not a value with \eqn{f(K) < 0.85}, it cannot be
+#' considered the existence of clusters in the data set.
 #' 
 #' @examples
 #' # Create a data set with two clusters
@@ -73,9 +97,7 @@
 kselection <- function(x,
                        max_centers = 15,
                        k_threshold = 0.85,
-                       iter.max    = 200,
-                       nstart      = 100,
-                       trace       = FALSE) {
+                       trace       = FALSE, ...) {
   if (max_centers < 2)
     stop("'max_centers' must be greater than 2")
     
@@ -101,10 +123,7 @@ kselection <- function(x,
   }
   
   for (k in 1:max_centers) {
-    mod_info <- kmeans(x,
-                       centers  = k,
-                       iter.max = iter.max,
-                       nstart   = nstart)
+    mod_info <- kmeans(x, centers = k, ...)
     s_k[k]   <- sum(mod_info$withinss)
     
     if (k == 1) {
@@ -125,9 +144,7 @@ kselection <- function(x,
   result <- list(k           = which_cluster(f_k, k_threshold),
                  f_k         = f_k,
                  max_centers = max_centers,
-                 k_threshold = k_threshold,
-                 iter.max    = iter.max,
-                 nstart      = nstart)
+                 k_threshold = k_threshold)
   class(result) <- 'Kselection'
   
   return(result)
@@ -216,12 +233,19 @@ plot.Kselection <- function(x, ...) {
        xlab = 'Number of clusters k',
        ylab = 'f(k)',
        ylim = c(0, max_y))
+  lines(k, x$f_k[x$k],
+        col  = 'red',
+        pch  = 19,
+        type = 'p') 
 }
 
-#' @method plot Kselection
+#' @method print Kselection
 #' @export
 print.Kselection <- function(x, ...) {
-  cat('f(k) finds', num_clusters(x), 'clusters')
+  if (num_clusters(x) == 1)
+    cat('f(k) finds', num_clusters(x), 'cluster')
+  else
+    cat('f(k) finds', num_clusters(x), 'clusters')
 }
 
 # Calculate the weight factor for kselection
