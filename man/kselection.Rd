@@ -55,8 +55,8 @@ estimated distortion and decreases when there are areas of concentration in
 the data distribution.
 
 The values of \eqn{K} that yield \eqn{f(K) < 0.85} can be recommended for
-clustering. If there is not a value with \eqn{f(K) < 0.85}, it cannot be
-considered the existence of clusters in the data set.
+clustering. If there is not a value of \eqn{K} which \eqn{f(K) < 0.85}, it
+cannot be considered the existence of clusters in the data set.
 }
 \examples{
 # Create a data set with two clusters
@@ -77,7 +77,7 @@ plot(sol)
 Daniel Rodriguez Perez
 }
 \references{
-D T Pham, S S Dimov, and C D Nguyen "Selection of k in k-means clustering",
+D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
 Mechanical Engineering Science, 2004, pp. 103-119.
 }
 \seealso{

@@ -17,7 +17,7 @@
 #' @author Daniel Rodriguez Perez \email{daniel.rodriguez.perez@@gmail.com}
 #' 
 #' @references
-#' D T Pham, S S Dimov, and C D Nguyen "Selection of k in k-means clustering",
+#' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
 #' Mechanical Engineering Science, 2004, pp. 103-119.
 #' 
 #' @name kselection-package
