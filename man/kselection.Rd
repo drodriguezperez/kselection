@@ -3,7 +3,8 @@
 \alias{kselection}
 \title{Selection of K in K-means Clustering}
 \usage{
-kselection(x, max_centers = 15, k_threshold = 0.85, trace = FALSE, ...)
+kselection(x, max_centers = 15, k_threshold = 0.85, nstart = 25,
+  trace = FALSE, ...)
 }
 \arguments{
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
@@ -13,6 +14,9 @@ matrix.}
 
 \item{k_threshold}{maximum f(k) from which it can not consider the existence
 of more than one cluster in the data set. The default value is 0.85.}
+
+\item{nstart}{the number of random sets that should be chosen in the kmeans
+method.}
 
 \item{trace}{show a progress bar}
 
