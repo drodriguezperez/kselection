@@ -78,4 +78,40 @@ test_that("evaluate the solution", {
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(2))
   expect_that(num_clusters(k), equals(2))
+  
+  valid_clusters <- which(get_f_k(k) < k$k_threshold)
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 1)
+  k$k_threshold  <- 1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 0.1)
+  k$k_threshold  <- 0.1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+})
+
+test_that("evaluate the solution with four clusters", {
+  x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+                rnorm(100, -2, .1), rnorm(100, 1, .1),
+                rnorm(100, 1, .1), rnorm(100, -3, .1),
+                rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
+  k <- kselection(x)
+  
+  expect_that(num_clusters(x), is_null())
+  
+  expect_that(class(k), equals('Kselection'))
+  expect_that(k$k, equals(4))
+  expect_that(num_clusters(k), equals(4))
+  
+  valid_clusters <- which(get_f_k(k) < k$k_threshold)
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 1)
+  k$k_threshold  <- 1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 0.1)
+  k$k_threshold  <- 0.1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
 })

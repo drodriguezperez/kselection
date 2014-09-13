@@ -172,7 +172,7 @@ kselection <- function(x,
 #' sol <- kselection(dat)
 #' f_k <- get_f_k(sol)
 #' 
-#' @seealso \code{\link{num_clusters}},
+#' @seealso \code{\link{num_clusters}}, \code{num_clusters_all}
 #' 
 #' @rdname get_f_k
 #' @export get_f_k
@@ -194,11 +194,11 @@ get_f_k.Kselection <- function(obj) {
 
 #' Get the number of clusters
 #' 
-#' Get the number of clusters
+#' The optimal number of clusters proposed by the method
 #' 
 #' @param obj the output of kselection function
 #' 
-#' @return the number of clusters
+#' @return the number of clusters proposed
 #' 
 #' @examples
 #' # Create a data set with two clusters
@@ -209,7 +209,7 @@ get_f_k.Kselection <- function(obj) {
 #' sol <- kselection(dat)
 #' k   <- num_clusters(sol)
 #' 
-#' @seealso \code{\link{get_f_k}}
+#' @seealso \code{num_clusters_all}, \code{\link{get_f_k}}
 #' 
 #' @rdname num_clusters
 #' @export num_clusters
@@ -229,11 +229,49 @@ num_clusters.Kselection <- function(obj) {
   obj$k
 }
 
+#' Get all recommended numbers of clusters
+#' 
+#' The number of cluster which could be recommender according the method
+#' threshold.
+#' 
+#' @param obj the output of kselection function
+#' 
+#' @return an array of number of clusters that could be recommended 
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'               
+#' # Get the optimal number of clustes
+#' sol <- kselection(dat)
+#' k   <- num_clusters(sol)
+#' 
+#' @seealso \code{num_clusters}, \code{\link{get_f_k}}
+#' 
+#' @rdname num_clusters_all
+#' @export num_clusters_all
+num_clusters_all <- function(obj) {
+  UseMethod("num_clusters_all")
+}
+
+#' @method num_clusters_all default
+#' @export
+num_clusters_all.default <- function(obj) {
+  NULL
+}
+
+#' @method num_clusters_all Kselection
+#' @export
+num_clusters_all.Kselection <- function(obj) {
+  which(get_f_k(obj) < obj$k_threshold)
+}
+
 #' @method plot Kselection
 #' @export
 plot.Kselection <- function(x, ...) {
   max_y   <- 1.1 * max(x$f_k)
-  valid_k <- x$f_k < x$k_threshold
+  valid_k <- num_clusters_all(x)
   
   plot(x$f_k,
        type = 'b',
@@ -244,8 +282,8 @@ plot.Kselection <- function(x, ...) {
         col  = 'green',
         pch  = 19,
         type = 'p')
-  if (any(valid_k)) {
-    lines(which(valid_k), x$f_k[valid_k],
+  if (length(valid_k) > 0) {
+    lines(valid_k, x$f_k[valid_k],
           col  = 'green',
           type = 'p')
     legend('topright', c('Lower f(K)', 'Valid K'),

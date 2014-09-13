@@ -24,6 +24,6 @@ sol <- kselection(dat)
 f_k <- get_f_k(sol)
 }
 \seealso{
-\code{\link{num_clusters}},
+\code{\link{num_clusters}}, \code{num_clusters_all}
 }
 
