@@ -18,6 +18,9 @@ the output of kselection function with new \code{k_threshold}.
 Set the maximum value of \eqn{f(K)} from which can not be considered the
 existence of more than one cluster.
 }
+\author{
+Daniel Rodriguez Perez
+}
 \seealso{
 \code{\link{get_k_threshold}}
 }

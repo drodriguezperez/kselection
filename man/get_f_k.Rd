@@ -23,6 +23,9 @@ dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
 sol <- kselection(dat)
 f_k <- get_f_k(sol)
 }
+\author{
+Daniel Rodriguez Perez
+}
 \seealso{
 \code{\link{num_clusters}}, \code{\link{num_clusters_all}}
 }
