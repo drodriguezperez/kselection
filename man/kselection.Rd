@@ -12,8 +12,9 @@ matrix.}
 
 \item{max_centers}{maximum number of clusters for evaluation.}
 
-\item{k_threshold}{maximum f(k) from which it can not consider the existence
-of more than one cluster in the data set. The default value is 0.85.}
+\item{k_threshold}{maximum value of \eqn{f(K)} from which can not be
+considered the existence of more than one cluster in the data set.
+The default value is 0.85.}
 
 \item{nstart}{the number of random sets that should be chosen in the kmeans
 method.}
@@ -23,7 +24,7 @@ method.}
 \item{...}{arguments to be passed to the kmeans method}
 }
 \value{
-an object with the f(k) results
+an object with the \eqn{f(K)} results
 }
 \description{
 Selection of k in k-means clustering based on Pham et al. paper

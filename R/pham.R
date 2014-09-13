@@ -26,14 +26,15 @@
 #' @param x numeric matrix of data, or an object that can be coerced to such a
 #'        matrix.
 #' @param max_centers maximum number of clusters for evaluation.
-#' @param k_threshold maximum f(k) from which it can not consider the existence
-#'        of more than one cluster in the data set. The default value is 0.85.
+#' @param k_threshold maximum value of \eqn{f(K)} from which can not be
+#'        considered the existence of more than one cluster in the data set.
+#'        The default value is 0.85.
 #' @param nstart the number of random sets that should be chosen in the kmeans
 #'        method.
 #' @param trace show a progress bar
 #' @param ... arguments to be passed to the kmeans method
 #' 
-#' @return an object with the f(k) results
+#' @return an object with the \eqn{f(K)} results
 #' 
 #' @details
 #' This function implements the method proposed by Pham, Dimov and Nguyen for
@@ -154,6 +155,66 @@ kselection <- function(x,
   
   return(result)
 }
+#' Get the \code{k_threshold}
+#' 
+#' Get the maximum value of \eqn{f(K)} from which can not be considered the
+#' existence of more than one cluster
+#' 
+#' @param obj the output of kselection function
+#' 
+#' @return the \code{k_threshold} value
+#' 
+#' @seealso \code{\link{set_k_threshold}}
+#' 
+#' @rdname get_k_threshold
+#' @export get_k_threshold
+get_k_threshold <- function(obj) {
+  UseMethod("get_k_threshold")
+}
+
+#' @method get_k_threshold default
+#' @export
+get_k_threshold.default <- function(obj) {
+  NULL
+}
+
+#' @method get_k_threshold Kselection
+#' @export
+get_k_threshold.Kselection <- function(obj) {
+  obj$k_threshold
+}
+
+#' Set the \code{k_threshold}
+#' 
+#' Set the maximum value of \eqn{f(K)} from which can not be considered the
+#' existence of more than one cluster
+#' 
+#' @param obj the output of kselection function
+#' @param k_threshold maximum value of \eqn{f(K)} from which can not be
+#'        considered the existence of more than one cluster in the data set.
+#' @return the output of kselection function with new \code{k_threshold}
+#' 
+#' @seealso \code{\link{get_k_threshold}}
+#' 
+#' @rdname set_k_threshold
+#' @export set_k_threshold
+set_k_threshold <- function(obj, k_threshold) {
+  UseMethod("set_k_threshold")
+}
+
+#' @method set_k_threshold Kselection
+#' @export
+set_k_threshold.Kselection <- function(obj, k_threshold) {
+  if (length(k_threshold) != 1L)
+    stop('k_threshold must be scalar')
+  if (!is.numeric(k_threshold)) 
+    stop('k_threshold must be numeric')
+  if (k_threshold <= 0)
+    stop('k_threshold must be numeric bigger than 0')
+  
+  obj$k_threshold <- k_threshold
+  obj
+}
 
 #' Get the f(k) vector
 #' 
@@ -264,7 +325,7 @@ num_clusters_all.default <- function(obj) {
 #' @method num_clusters_all Kselection
 #' @export
 num_clusters_all.Kselection <- function(obj) {
-  which(get_f_k(obj) < obj$k_threshold)
+  which(get_f_k(obj) < get_k_threshold(obj))
 }
 
 #' @method plot Kselection
@@ -274,6 +335,7 @@ plot.Kselection <- function(x, ...) {
   valid_k <- num_clusters_all(x)
   
   plot(x$f_k,
+       main = to.string(x),
        type = 'b',
        xlab = 'Number of clusters k',
        ylab = 'f(k)',
@@ -286,19 +348,21 @@ plot.Kselection <- function(x, ...) {
     lines(valid_k, x$f_k[valid_k],
           col  = 'green',
           type = 'p')
-    legend('topright', c('Lower f(K)', 'Valid K'),
-           col = c('green','green'),
-           pch = c(19, 1))
+    if (k$f_k[length(k$f_k)] > max_y / 2)
+      legend('bottomright', c('Lower f(K)', 'Recommended K'),
+             col = c('green','green'),
+             pch = c(19, 1))
+    else
+      legend('topright', c('Lower f(K)', 'Recommended K'),
+             col = c('green','green'),
+             pch = c(19, 1))
   }
 }
 
 #' @method print Kselection
 #' @export
 print.Kselection <- function(x, ...) {
-  if (num_clusters(x) == 1)
-    cat('f(k) finds', num_clusters(x), 'cluster')
-  else
-    cat('f(k) finds', num_clusters(x), 'clusters')
+  cat(to.string(x))
 }
 
 # Calculate the weight factor for kselection
@@ -338,4 +402,20 @@ which_cluster <- function(f_k, k_threshold) {
     return(1)
   else
     return(min(k))
+}
+
+# Generate a string with the recomender number of k
+#
+# Generate a string with the recomender number of k
+#
+# @param obj the output of kselection function
+# 
+# @return an string with the recomendation 
+#
+# @author Daniel Rodriguez Perez
+to.string <- function(obj) {
+  if (num_clusters(obj) == 1)
+    paste('f(k) finds', num_clusters(obj), 'cluster')
+  else
+    paste('f(k) finds', num_clusters(obj), 'clusters')
 }
