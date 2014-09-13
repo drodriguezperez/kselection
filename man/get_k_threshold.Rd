@@ -6,14 +6,14 @@
 get_k_threshold(obj)
 }
 \arguments{
-\item{obj}{the output of kselection function}
+\item{obj}{the output of \code{kselection} function.}
 }
 \value{
-the \code{k_threshold} value
+the \code{k_threshold} value.
 }
 \description{
 Get the maximum value of \eqn{f(K)} from which can not be considered the
-existence of more than one cluster
+existence of more than one cluster.
 }
 \seealso{
 \code{\link{set_k_threshold}}

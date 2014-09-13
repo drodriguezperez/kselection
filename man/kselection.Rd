@@ -19,15 +19,15 @@ The default value is 0.85.}
 \item{nstart}{the number of random sets that should be chosen in the kmeans
 method.}
 
-\item{trace}{show a progress bar}
+\item{trace}{show a progress bar.}
 
-\item{...}{arguments to be passed to the kmeans method}
+\item{...}{arguments to be passed to the kmeans method.}
 }
 \value{
-an object with the \eqn{f(K)} results
+an object with the \eqn{f(K)} results.
 }
 \description{
-Selection of k in k-means clustering based on Pham et al. paper
+Selection of k in k-means clustering based on Pham et al. paper.
 }
 \details{
 This function implements the method proposed by Pham, Dimov and Nguyen for
@@ -73,7 +73,7 @@ sol <- kselection(dat)
 
 # Get the results
 k   <- num_clusters(sol) # optimal number of clustes
-f_k <- get_f_k(sol)      # the f(k) vector
+f_k <- get_f_k(sol)      # the f(K) vector
 
 # Plot the results
 plot(sol)

@@ -6,17 +6,17 @@
 set_k_threshold(obj, k_threshold)
 }
 \arguments{
-\item{obj}{the output of kselection function}
+\item{obj}{the output of \code{kselection} function.}
 
 \item{k_threshold}{maximum value of \eqn{f(K)} from which can not be
-considered the existence of more than one cluster in the data set.}
+       considered the existence of more than one cluster in the data set.}
 }
 \value{
-the output of kselection function with new \code{k_threshold}
+the output of kselection function with new \code{k_threshold}.
 }
 \description{
 Set the maximum value of \eqn{f(K)} from which can not be considered the
-existence of more than one cluster
+existence of more than one cluster.
 }
 \seealso{
 \code{\link{get_k_threshold}}

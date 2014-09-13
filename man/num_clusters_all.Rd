@@ -6,10 +6,10 @@
 num_clusters_all(obj)
 }
 \arguments{
-\item{obj}{the output of kselection function}
+\item{obj}{the output of \code{kselection} function.}
 }
 \value{
-an array of number of clusters that could be recommended
+an array of number of clusters that could be recommended.
 }
 \description{
 The number of cluster which could be recommender according the method
@@ -25,6 +25,6 @@ sol <- kselection(dat)
 k   <- num_clusters(sol)
 }
 \seealso{
-\code{num_clusters}, \code{\link{get_f_k}}
+\code{\link{num_clusters}}, \code{\link{get_f_k}}
 }
 
