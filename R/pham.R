@@ -348,7 +348,7 @@ plot.Kselection <- function(x, ...) {
     lines(valid_k, x$f_k[valid_k],
           col  = 'green',
           type = 'p')
-    if (k$f_k[length(k$f_k)] > max_y / 2)
+    if (x$f_k[length(x$f_k)] > max_y / 2)
       legend('bottomright', c('Lower f(K)', 'Recommended K'),
              col = c('green','green'),
              pch = c(19, 1))
