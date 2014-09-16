@@ -165,6 +165,8 @@ kselection <- function(x,
 #' 
 #' @return the \code{k_threshold} value.
 #' 
+#' @author Daniel Rodriguez Perez
+#' 
 #' @seealso \code{\link{set_k_threshold}}
 #' 
 #' @rdname get_k_threshold
@@ -195,6 +197,8 @@ get_k_threshold.Kselection <- function(obj) {
 #'        considered the existence of more than one cluster in the data set.
 #'        
 #' @return the output of kselection function with new \code{k_threshold}.
+#' 
+#' @author Daniel Rodriguez Perez
 #' 
 #' @seealso \code{\link{get_k_threshold}}
 #' 
@@ -235,6 +239,8 @@ set_k_threshold.Kselection <- function(obj, k_threshold) {
 #' sol <- kselection(dat)
 #' f_k <- get_f_k(sol)
 #' 
+#' @author Daniel Rodriguez Perez
+#' 
 #' @seealso \code{\link{num_clusters}}, \code{\link{num_clusters_all}}
 #' 
 #' @rdname get_f_k
@@ -271,6 +277,8 @@ get_f_k.Kselection <- function(obj) {
 #' # Get the optimal number of clustes
 #' sol <- kselection(dat)
 #' k   <- num_clusters(sol)
+#' 
+#' @author Daniel Rodriguez Perez
 #' 
 #' @seealso \code{\link{num_clusters_all}}, \code{\link{get_f_k}}
 #' 
@@ -309,6 +317,8 @@ num_clusters.Kselection <- function(obj) {
 #' # Get the optimal number of clustes
 #' sol <- kselection(dat)
 #' k   <- num_clusters(sol)
+#' 
+#' @author Daniel Rodriguez Perez
 #' 
 #' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
 #' 
