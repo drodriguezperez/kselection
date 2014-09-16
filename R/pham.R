@@ -21,23 +21,77 @@
 
 #' Selection of K in K-means Clustering
 #' 
-#' Selection of k in k-means clustering based on Pham et al. paper
+#' Selection of k in k-means clustering based on Pham et al. paper.
 #' 
 #' @param x numeric matrix of data, or an object that can be coerced to such a
 #'        matrix.
 #' @param max_centers maximum number of clusters for evaluation.
-#' @param k_threshold cluster selection threshold for f(k) value.
-#' @param iter.max the maximum number of iterations allowed.
-#' @param nstart if centers is a number, how many random sets should be chosen?
-#' @param trace show a progress bar
+#' @param k_threshold maximum value of \eqn{f(K)} from which can not be
+#'        considered the existence of more than one cluster in the data set.
+#'        The default value is 0.85.
+#' @param nstart the number of random sets that should be chosen in the kmeans
+#'        method.
+#' @param trace show a progress bar.
+#' @param ... arguments to be passed to the kmeans method.
 #' 
-#' @return an array with f(k) metric
+#' @return an object with the \eqn{f(K)} results.
+#' 
+#' @details
+#' This function implements the method proposed by Pham, Dimov and Nguyen for
+#' selecting the number of clusters for the K-means algorithm. In this method
+#' a function \eqn{f(K)} is used to evaluate the quality of the resulting
+#' clustering and help decide on the optimal value of \eqn{K} for each data
+#' set. The \eqn{f(K)} function is defined as
+#' \deqn{f(K) = \left\{
+#' \begin{array}{rl}
+#'  1 & \mbox{if $K = 1$} \\
+#'  \frac{S_K}{\alpha_K S_{K-1}} & \mbox{if $S_{K-1} \ne 0$, $\forall K >1$} \\
+#'  1 & \mbox{if $S_{K-1} = 0$, $\forall K >1$}
+#' \end{array} \right.}{f(K) =
+#'  1, if K = 1;
+#'  (S_K)/(\alpha_K S_{K-1}, if S_{K-1} \ne 0, forall K >1;
+#'  1, if S_{K-1} = 0, forall K > 1}
+#' where \eqn{S_K} is the sum of the distortion of all cluster and \eqn{\alpha_K}
+#' is a weight factor which is defined as
+#' \deqn{\alpha_K = \left\{
+#' \begin{array}{rl}
+#'  1 - \frac{3}{4 N_d}                        & \mbox{if $K = 1$ and $N_d > 1$} \\
+#'  \alpha_{K-1} + \frac{1 - \alpha_{K-1}}{6}  & \mbox{if $K > 2$ and $N_d > 1$}
+#' \end{array} \right.}{\alpha_K = 
+#'  1 - 3/(4 * N_d), if K = 1 and N_d > 1;
+#'  \alpha_{K-1} + (1 - \alpha_{K-1})/6, if K > 2 and N_d > 1}
+#' where \eqn{N_d} is the number of dimensions of the data set.
+#' 
+#' In this definition \eqn{f(K)} is the ratio of the real distortion to the
+#' estimated distortion and decreases when there are areas of concentration in
+#' the data distribution.
+#' 
+#' The values of \eqn{K} that yield \eqn{f(K) < 0.85} can be recommended for
+#' clustering. If there is not a value of \eqn{K} which \eqn{f(K) < 0.85}, it
+#' cannot be considered the existence of clusters in the data set.
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'
+#' # Ejecute the method
+#' sol <- kselection(dat)
+#' 
+#' # Get the results
+#' k   <- num_clusters(sol) # optimal number of clustes
+#' f_k <- get_f_k(sol)      # the f(K) vector
+#' 
+#' # Plot the results
+#' plot(sol)
 #' 
 #' @author Daniel Rodriguez Perez
 #' 
 #' @references
-#' D T Pham, S S Dimov, and C D Nguyen "Selection of k in k-means clustering",
+#' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
 #' Mechanical Engineering Science, 2004, pp. 103-119.
+#' 
+#' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
 #' 
 #' @import tools
 #' 
@@ -46,9 +100,8 @@
 kselection <- function(x,
                        max_centers = 15,
                        k_threshold = 0.85,
-                       iter.max    = 200,
-                       nstart      = 100,
-                       trace       = FALSE) {
+                       nstart      = 25,
+                       trace       = FALSE, ...) {
   if (max_centers < 2)
     stop("'max_centers' must be greater than 2")
     
@@ -75,9 +128,8 @@ kselection <- function(x,
   
   for (k in 1:max_centers) {
     mod_info <- kmeans(x,
-                       centers  = k,
-                       iter.max = iter.max,
-                       nstart   = nstart)
+                       centers = k,
+                       nstart  = nstart, ...)
     s_k[k]   <- sum(mod_info$withinss)
     
     if (k == 1) {
@@ -95,19 +147,140 @@ kselection <- function(x,
     }
   }
   
-  result <- list(k    = which_cluster(f_k, k_threshold),
-                 f_k  = f_k,
-                 s_k  = s_k)
+  result <- list(k           = which_cluster(f_k, k_threshold),
+                 f_k         = f_k,
+                 max_centers = max_centers,
+                 k_threshold = k_threshold)
   class(result) <- 'Kselection'
   
   return(result)
 }
 
-#' Get the number of clusters
+#' Get the \code{k_threshold}
 #' 
-#' Get the number of clusters
+#' Get the maximum value of \eqn{f(K)} from which can not be considered the
+#' existence of more than one cluster.
 #' 
-#' @param obj the output of kselection function
+#' @param obj the output of \code{kselection} function.
+#' 
+#' @return the \code{k_threshold} value.
+#' 
+#' @author Daniel Rodriguez Perez
+#' 
+#' @seealso \code{\link{set_k_threshold}}
+#' 
+#' @rdname get_k_threshold
+#' @export get_k_threshold
+get_k_threshold <- function(obj) {
+  UseMethod("get_k_threshold")
+}
+
+#' @method get_k_threshold default
+#' @export
+get_k_threshold.default <- function(obj) {
+  NULL
+}
+
+#' @method get_k_threshold Kselection
+#' @export
+get_k_threshold.Kselection <- function(obj) {
+  obj$k_threshold
+}
+
+#' Set the \code{k_threshold}
+#' 
+#' Set the maximum value of \eqn{f(K)} from which can not be considered the
+#' existence of more than one cluster.
+#' 
+#' @param obj the output of \code{kselection} function.
+#' @param k_threshold maximum value of \eqn{f(K)} from which can not be
+#'        considered the existence of more than one cluster in the data set.
+#'        
+#' @return the output of kselection function with new \code{k_threshold}.
+#' 
+#' @author Daniel Rodriguez Perez
+#' 
+#' @seealso \code{\link{get_k_threshold}}
+#' 
+#' @rdname set_k_threshold
+#' @export set_k_threshold
+set_k_threshold <- function(obj, k_threshold) {
+  UseMethod("set_k_threshold")
+}
+
+#' @method set_k_threshold Kselection
+#' @export
+set_k_threshold.Kselection <- function(obj, k_threshold) {
+  if (length(k_threshold) != 1L)
+    stop('k_threshold must be scalar')
+  if (!is.numeric(k_threshold)) 
+    stop('k_threshold must be numeric')
+  if (k_threshold <= 0)
+    stop('k_threshold must be numeric bigger than 0')
+  
+  obj$k_threshold <- k_threshold
+  obj
+}
+
+#' Get the \eqn{f(K)} vector
+#' 
+#' Get the \eqn{f(K)} vector.
+#' 
+#' @param obj the output of \code{kselection} function.
+#' 
+#' @return the vector of \eqn{f(K)} function.
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'               
+#' # Get the f(k) vector
+#' sol <- kselection(dat)
+#' f_k <- get_f_k(sol)
+#' 
+#' @author Daniel Rodriguez Perez
+#' 
+#' @seealso \code{\link{num_clusters}}, \code{\link{num_clusters_all}}
+#' 
+#' @rdname get_f_k
+#' @export get_f_k
+get_f_k <- function(obj) {
+  UseMethod("get_f_k")
+}
+
+#' @method get_f_k default
+#' @export
+get_f_k.default <- function(obj) {
+  NULL
+}
+
+#' @method get_f_k Kselection
+#' @export
+get_f_k.Kselection <- function(obj) {
+  obj$f_k
+}
+
+#' Get the number of clusters.
+#' 
+#' The optimal number of clusters proposed by the method.
+#' 
+#' @param obj the output of kselection function.
+#' 
+#' @return the number of clusters proposed.
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'               
+#' # Get the optimal number of clustes
+#' sol <- kselection(dat)
+#' k   <- num_clusters(sol)
+#' 
+#' @author Daniel Rodriguez Perez
+#' 
+#' @seealso \code{\link{num_clusters_all}}, \code{\link{get_f_k}}
 #' 
 #' @rdname num_clusters
 #' @export num_clusters
@@ -127,30 +300,91 @@ num_clusters.Kselection <- function(obj) {
   obj$k
 }
 
+#' Get all recommended numbers of clusters
+#' 
+#' The number of cluster which could be recommender according the method
+#' threshold.
+#' 
+#' @param obj the output of \code{kselection} function.
+#' 
+#' @return an array of number of clusters that could be recommended.
+#' 
+#' @examples
+#' # Create a data set with two clusters
+#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+#'               
+#' # Get the optimal number of clustes
+#' sol <- kselection(dat)
+#' k   <- num_clusters(sol)
+#' 
+#' @author Daniel Rodriguez Perez
+#' 
+#' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
+#' 
+#' @rdname num_clusters_all
+#' @export num_clusters_all
+num_clusters_all <- function(obj) {
+  UseMethod("num_clusters_all")
+}
+
+#' @method num_clusters_all default
+#' @export
+num_clusters_all.default <- function(obj) {
+  NULL
+}
+
+#' @method num_clusters_all Kselection
+#' @export
+num_clusters_all.Kselection <- function(obj) {
+  which(get_f_k(obj) < get_k_threshold(obj))
+}
+
 #' @method plot Kselection
 #' @export
 plot.Kselection <- function(x, ...) {
-  max_y <- 1.1 * max(x$f_k)
+  max_y   <- 1.1 * max(x$f_k)
+  valid_k <- num_clusters_all(x)
+  
   plot(x$f_k,
+       main = to.string(x),
+       type = 'b',
        xlab = 'Number of clusters k',
-       ylab = 'f(k)',
+       ylab = 'f(K)',
        ylim = c(0, max_y))
+  lines(x$k, x$f_k[x$k],
+        col  = 'green',
+        pch  = 19,
+        type = 'p')
+  if (length(valid_k) > 0) {
+    lines(valid_k, x$f_k[valid_k],
+          col  = 'green',
+          type = 'p')
+    if (x$f_k[length(x$f_k)] > max_y / 2)
+      legend('bottomright', c('Lower f(K)', 'Recommended K'),
+             col = c('green','green'),
+             pch = c(19, 1))
+    else
+      legend('topright', c('Lower f(K)', 'Recommended K'),
+             col = c('green','green'),
+             pch = c(19, 1))
+  }
 }
 
-#' @method plot Kselection
+#' @method print Kselection
 #' @export
-print.Kselection <- function(obj) {
-  cat('The f(k) function finds', obj$k, 'clusters')
+print.Kselection <- function(x, ...) {
+  cat(to.string(x))
 }
 
 # Calculate the weight factor for kselection
 #
-# Calculate the weight factor for kselection
+# Calculate the weight factor for kselection.
 #
-# @param  n_d the number of dimensions (attributes)
-# @param k the number of iterations
+# @param n_d the number of dimensions (attributes).
+# @param k the number of iterations.
 #
-# @return an array with the weights
+# @return an array with the weights.
 # 
 # @author Daniel Rodriguez Perez
 alpha_k <- function(n_d, k) {
@@ -164,10 +398,36 @@ alpha_k <- function(n_d, k) {
   return(result)
 }
 
+# Calculate the optimal cluster for kselection
+#
+# Calculate the optimal cluster for kselection.
+#
+# @param f_k the \eqn{f(K)} array.
+# @param k_threshold cluster selection threshold for \eqn{f(K)} value.
+#
+# @return the number of clusters.
+# 
+# @author Daniel Rodriguez Perez
 which_cluster <- function(f_k, k_threshold) {
   k <- which(f_k == min(f_k) & f_k < k_threshold)
   if (length(k) == 0)
     return(1)
   else
     return(min(k))
+}
+
+# Generate a string with the recomender number of k
+#
+# Generate a string with the recomender number of k.
+#
+# @param obj the output of kselection function.
+# 
+# @return an string with the recomendation.
+#
+# @author Daniel Rodriguez Perez
+to.string <- function(obj) {
+  if (num_clusters(obj) == 1)
+    paste('f(k) finds', num_clusters(obj), 'cluster')
+  else
+    paste('f(k) finds', num_clusters(obj), 'clusters')
 }

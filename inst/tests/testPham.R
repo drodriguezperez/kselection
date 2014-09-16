@@ -21,6 +21,25 @@
 
 context("Tests for kselection")
 
+test_that("evaluate k_threshold getter and setters", {
+  x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+                rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+  k <- kselection(x)
+  
+  expect_that(get_k_threshold(x), is_null())
+  expect_that(get_k_threshold(k), equals(0.85))
+  
+  expect_that(set_k_threshold(k, x), throws_error('k_threshold must be scalar'))
+  expect_that(set_k_threshold(k, 'x'), throws_error('k_threshold must be numeric'))
+  expect_that(set_k_threshold(k, 0), throws_error('k_threshold must be numeric bigger than 0'))
+  
+  k <- set_k_threshold(k, 0.5)
+  expect_that(get_k_threshold(k), equals(0.5))
+  
+  k <- set_k_threshold(k, 1.5)
+  expect_that(get_k_threshold(k), equals(1.5))  
+})
+  
 test_that("evaluate alpha_k calculations", {
   n_d    <- 3
   k      <- 4
@@ -74,8 +93,46 @@ test_that("evaluate the solution", {
   k <- kselection(x)
   
   expect_that(num_clusters(x), is_null())
+  expect_that(num_clusters_all(x), is_null())
   
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(2))
   expect_that(num_clusters(k), equals(2))
+  
+  valid_clusters <- which(get_f_k(k) < k$k_threshold)
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 1)
+  k$k_threshold  <- 1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 0.1)
+  k$k_threshold  <- 0.1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+})
+
+test_that("evaluate the solution with four clusters", {
+  x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+                rnorm(100, -2, .1), rnorm(100, 1, .1),
+                rnorm(100, 1, .1), rnorm(100, -3, .1),
+                rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
+  k <- kselection(x)
+  
+  expect_that(num_clusters(x), is_null())
+  expect_that(num_clusters_all(x), is_null())
+  
+  expect_that(class(k), equals('Kselection'))
+  expect_that(k$k, equals(4))
+  expect_that(num_clusters(k), equals(4))
+  
+  valid_clusters <- which(get_f_k(k) < k$k_threshold)
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 1)
+  k$k_threshold  <- 1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
+  
+  valid_clusters <- which(get_f_k(k) < 0.1)
+  k$k_threshold  <- 0.1
+  expect_that(num_clusters_all(k), equals(valid_clusters))
 })
