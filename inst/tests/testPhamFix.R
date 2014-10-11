@@ -27,4 +27,7 @@ test_that("evaluate data.frames with low rows", {
   
   obj <- kselection(x)
   expect_that(class(obj), equals("Kselection"))
+  
+  expect_warning(kselection(x),
+                 "The maximum number of clusters has been reduced from 15 to 9")
 })

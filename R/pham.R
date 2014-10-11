@@ -115,6 +115,7 @@ kselection <- function(x,
   num_col <- dim(x)[2]
   
   if (num_row <= max_centers) {
+    warning('The maximum number of clusters has been reduced from ', max_centers, ' to ', num_row - 1)
     max_centers <- num_row - 1
   } 
   
