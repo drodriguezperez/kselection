@@ -26,5 +26,5 @@ test_that("evaluate data.frames with low rows", {
                   rnorm(5, -2, .1), rnorm(5, -3, .1)), 10, 2)
   
   obj <- kselection(x)
-  expect_that(num_clusters(obj) , equals(2))
+  expect_that(class(obj), equals("Kselection"))
 })
