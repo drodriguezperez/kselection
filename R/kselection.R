@@ -1,4 +1,4 @@
-#' Selection of k in k-means clustering
+#' Selection of K in K-Means Clustering
 #'
 #' Selection of k in k-means clustering based on Pham et al. paper ``Selection
 #' of k in k-means clustering''

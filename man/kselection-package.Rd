@@ -2,7 +2,7 @@
 \docType{package}
 \name{kselection-package}
 \alias{kselection-package}
-\title{Selection of k in k-means clustering}
+\title{Selection of K in K-Means Clustering}
 \description{
 Selection of k in k-means clustering based on Pham et al. paper ``Selection
 of k in k-means clustering''
