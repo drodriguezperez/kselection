@@ -1,0 +1,6 @@
+kselection 0.1.1
+--------------------------------------------------------------------------------
+
+* BREAKING CHANGE: Now the `trace`option in the `kselection` function shows a trace, the progres must be selected using the `progressBar` option
+* Add the possibility that `kselection` function display a trace of the progress.
+* Fix the error which appears in `kselection` when the number of rows in the input data is lower than 15.

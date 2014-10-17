@@ -4,7 +4,7 @@
 \title{Selection of K in K-means Clustering}
 \usage{
 kselection(x, max_centers = 15, k_threshold = 0.85, nstart = 25,
-  trace = FALSE, ...)
+  progressBar = FALSE, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
@@ -19,7 +19,9 @@ The default value is 0.85.}
 \item{nstart}{the number of random sets that should be chosen in the kmeans
 method.}
 
-\item{trace}{show a progress bar.}
+\item{progressBar}{show a progress bar.}
+
+\item{trace}{display a trace of the progress.}
 
 \item{...}{arguments to be passed to the kmeans method.}
 }

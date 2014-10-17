@@ -31,7 +31,8 @@
 #'        The default value is 0.85.
 #' @param nstart the number of random sets that should be chosen in the kmeans
 #'        method.
-#' @param trace show a progress bar.
+#' @param progressBar show a progress bar.
+#' @param trace display a trace of the progress.
 #' @param ... arguments to be passed to the kmeans method.
 #' 
 #' @return an object with the \eqn{f(K)} results.
@@ -101,6 +102,7 @@ kselection <- function(x,
                        max_centers = 15,
                        k_threshold = 0.85,
                        nstart      = 25,
+                       progressBar = FALSE,
                        trace       = FALSE, ...) {
   if (max_centers < 2)
     stop("'max_centers' must be greater than 2")
@@ -112,15 +114,16 @@ kselection <- function(x,
   num_row <- dim(x)[1]
   num_col <- dim(x)[2]
   
-  if (num_row < max_centers) {
-    max_centers <- num_row
+  if (num_row <= max_centers) {
+    warning('The maximum number of clusters has been reduced from ', max_centers, ' to ', num_row - 1)
+    max_centers <- num_row - 1
   } 
   
   f_k <- rep(1, max_centers)
   s_k <- rep(1, max_centers)
   a_k <- alpha_k(num_col, max_centers)
   
-  if (trace) {
+  if (progressBar) {
     pb <- txtProgressBar(min   = 0,
                          max   = max_centers,
                          style = 3)
@@ -141,8 +144,12 @@ kselection <- function(x,
         f_k[k] <- s_k[k]  / (a_k[k] * s_k[k - 1])
       }      
     }
-
+    
     if (trace) {
+      message('Number of clusters', k,' - f(k) = ', f_k[k])
+    }
+    
+    if (progressBar) {
       setTxtProgressBar(pb, k)
     }
   }

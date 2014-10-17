@@ -1,8 +1,8 @@
 Package: kselection
 Type: Package
 Title: Selection of k in k-means clustering
-Version: 0.1.0
-Date: 2014-09-15
+Version: 0.1.1
+Date: 2014-10-17
 Author: Daniel Rodriguez Perez
 Maintainer: Daniel Rodriguez Perez <daniel.rodriguez.perez@gmail.com>
 Description: Selection of k in k-means clustering based on Pham et al. paper

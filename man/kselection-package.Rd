@@ -14,7 +14,7 @@ Nguyen of 2004.
 
 \tabular{ll}{
   Package: \tab kselection \cr
-  Version: \tab 0.1.0 \cr
+  Version: \tab 0.1.1 \cr
   License: \tab GPL-3 \cr
 }
 }
