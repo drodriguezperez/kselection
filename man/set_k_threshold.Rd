@@ -19,7 +19,7 @@ Set the maximum value of \eqn{f(K)} from which can not be considered the
 existence of more than one cluster.
 }
 \author{
-Daniel Rodriguez Perez
+Daniel Rodriguez
 }
 \seealso{
 \code{\link{get_k_threshold}}

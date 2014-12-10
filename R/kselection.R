@@ -14,7 +14,7 @@
 #'   License: \tab GPL-3 \cr
 #' }
 #'
-#' @author Daniel Rodriguez Perez \email{daniel.rodriguez.perez@@gmail.com}
+#' @author Daniel Rodriguez \email{daniel.rodriguez.perez@@gmail.com}
 #' 
 #' @references
 #' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",

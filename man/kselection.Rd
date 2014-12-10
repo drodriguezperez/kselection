@@ -81,7 +81,7 @@ f_k <- get_f_k(sol)      # the f(K) vector
 plot(sol)
 }
 \author{
-Daniel Rodriguez Perez
+Daniel Rodriguez
 }
 \references{
 D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",

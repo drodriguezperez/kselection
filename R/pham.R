@@ -86,7 +86,7 @@
 #' # Plot the results
 #' plot(sol)
 #' 
-#' @author Daniel Rodriguez Perez
+#' @author Daniel Rodriguez
 #' 
 #' @references
 #' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
@@ -172,7 +172,7 @@ kselection <- function(x,
 #' 
 #' @return the \code{k_threshold} value.
 #' 
-#' @author Daniel Rodriguez Perez
+#' @author Daniel Rodriguez
 #' 
 #' @seealso \code{\link{set_k_threshold}}
 #' 
@@ -205,7 +205,7 @@ get_k_threshold.Kselection <- function(obj) {
 #'        
 #' @return the output of kselection function with new \code{k_threshold}.
 #' 
-#' @author Daniel Rodriguez Perez
+#' @author Daniel Rodriguez
 #' 
 #' @seealso \code{\link{get_k_threshold}}
 #' 
@@ -246,7 +246,7 @@ set_k_threshold.Kselection <- function(obj, k_threshold) {
 #' sol <- kselection(dat)
 #' f_k <- get_f_k(sol)
 #' 
-#' @author Daniel Rodriguez Perez
+#' @author Daniel Rodriguez
 #' 
 #' @seealso \code{\link{num_clusters}}, \code{\link{num_clusters_all}}
 #' 
@@ -285,7 +285,7 @@ get_f_k.Kselection <- function(obj) {
 #' sol <- kselection(dat)
 #' k   <- num_clusters(sol)
 #' 
-#' @author Daniel Rodriguez Perez
+#' @author Daniel Rodriguez
 #' 
 #' @seealso \code{\link{num_clusters_all}}, \code{\link{get_f_k}}
 #' 
@@ -325,7 +325,7 @@ num_clusters.Kselection <- function(obj) {
 #' sol <- kselection(dat)
 #' k   <- num_clusters(sol)
 #' 
-#' @author Daniel Rodriguez Perez
+#' @author Daniel Rodriguez
 #' 
 #' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
 #' 
@@ -393,7 +393,7 @@ print.Kselection <- function(x, ...) {
 #
 # @return an array with the weights.
 # 
-# @author Daniel Rodriguez Perez
+# @author Daniel Rodriguez
 alpha_k <- function(n_d, k) {
   result <- 1 - 3/(4 * n_d)
   result <- rep(result, k)
@@ -414,7 +414,7 @@ alpha_k <- function(n_d, k) {
 #
 # @return the number of clusters.
 # 
-# @author Daniel Rodriguez Perez
+# @author Daniel Rodriguez
 which_cluster <- function(f_k, k_threshold) {
   k <- which(f_k == min(f_k) & f_k < k_threshold)
   if (length(k) == 0)
@@ -431,7 +431,7 @@ which_cluster <- function(f_k, k_threshold) {
 # 
 # @return an string with the recomendation.
 #
-# @author Daniel Rodriguez Perez
+# @author Daniel Rodriguez
 to.string <- function(obj) {
   if (num_clusters(obj) == 1)
     paste('f(k) finds', num_clusters(obj), 'cluster')

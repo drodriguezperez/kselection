@@ -24,7 +24,7 @@ sol <- kselection(dat)
 f_k <- get_f_k(sol)
 }
 \author{
-Daniel Rodriguez Perez
+Daniel Rodriguez
 }
 \seealso{
 \code{\link{num_clusters}}, \code{\link{num_clusters_all}}
