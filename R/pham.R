@@ -398,8 +398,8 @@ alpha_k <- function(n_d, k) {
   result <- 1 - 3/(4 * n_d)
   result <- rep(result, k)
   
-  for (k in 3:k) {
-    result[k] <- result[k - 1] + (1 - result[k - 1]) / 6
+  for (i in 3:k) {
+    result[i] <- result[i - 1] + (1 - result[i - 1]) / 6
   }
   
   return(result)
