@@ -24,7 +24,7 @@ method.}
 
 \item{trace}{display a trace of the progress.}
 
-\item{...}{arguments to be passed to the \code{fun_cluster} method.}
+\item{...}{arguments to be passed to the \code{kmeans} method.}
 
 \item{fun_cluster}{function to cluster by (e.g. \code{kmeans}). The function
 must have a named attribute \code{tot.withss} which is a numeric with one
@@ -78,7 +78,7 @@ cannot be considered the existence of clusters in the data set.
 dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
 
-# Ejecute the method
+# Execute the method
 sol <- kselection(dat)
 
 # Get the results

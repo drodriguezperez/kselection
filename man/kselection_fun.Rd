@@ -5,7 +5,7 @@
 \title{Selection of K in Generalized K-means Clustering}
 \usage{
 kselection_fun(x, fun_cluster, max_centers = 15, k_threshold = 0.85,
-  nstart = 25, progressBar = FALSE, trace = FALSE, ...)
+  progressBar = FALSE, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
@@ -20,9 +20,6 @@ value, the sum of the total within sum of squaresvector}
 \item{k_threshold}{maximum value of \eqn{f(K)} from which can not be
 considered the existence of more than one cluster in the data set.
 The default value is 0.85.}
-
-\item{nstart}{the number of random sets that should be chosen in the kmeans
-method.}
 
 \item{progressBar}{show a progress bar.}
 
@@ -77,7 +74,7 @@ cannot be considered the existence of clusters in the data set.
 dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
 
-# Ejecute the method
+# Execute the method
 sol <- kselection_fun(dat, kmeans, nstart = 25)
 
 # Get the results

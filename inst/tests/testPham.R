@@ -87,6 +87,13 @@ test_that("evaluate invalid inputs values", {
               throws_error('x must contain numerical data'))
 })
 
+test_that("evaluate invalid inputs to kselection_fun", {
+  test_data    <- as.matrix(1:300, 100, 3)
+  expect_that(kselection_fun(test_data, fun_cluster = "string"),
+              throws_error("'fun_cluster' must be a function."))
+
+})
+
 test_that("evaluate the solution", {
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)

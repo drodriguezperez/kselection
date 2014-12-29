@@ -34,8 +34,6 @@
 #' @param k_threshold maximum value of \eqn{f(K)} from which can not be
 #'        considered the existence of more than one cluster in the data set.
 #'        The default value is 0.85.
-#' @param nstart the number of random sets that should be chosen in the kmeans
-#'        method.
 #' @param progressBar show a progress bar.
 #' @param trace display a trace of the progress.
 #' @param ... arguments to be passed to the \code{fun_cluster} method.
@@ -107,7 +105,6 @@ kselection_fun <- function(x,
                        fun_cluster,
                        max_centers = 15,
                        k_threshold = 0.85,
-                       nstart      = 25,
                        progressBar = FALSE,
                        trace       = FALSE, ...) {
   if (!is.function(fun_cluster))
@@ -141,7 +138,6 @@ kselection_fun <- function(x,
   for (k in 1:max_centers) {
     mod_info <- fun_cluster(x,
                        k,
-                       nstart = nstart,
                        ...)
     s_k[k]   <- mod_info$tot.withinss
 
@@ -194,10 +190,10 @@ kselection_fun <- function(x,
 #'        method.
 #' @param progressBar show a progress bar.
 #' @param trace display a trace of the progress.
-#' @param ... arguments to be passed to the \code{fun_cluster} method.
-#' 
+#' @param ... arguments to be passed to the \code{kmeans} method.
+#'
 #' @return an object with the \eqn{f(K)} results.
-#' 
+#'
 #' @details
 #' This function implements the method proposed by Pham, Dimov and Nguyen for
 #' selecting the number of clusters for the K-means algorithm. In this method
@@ -237,7 +233,7 @@ kselection_fun <- function(x,
 #' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
 #'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
 #'
-#' # Ejecute the method
+#' # Execute the method
 #' sol <- kselection(dat)
 #'
 #' # Get the results
@@ -266,12 +262,12 @@ kselection <- function(x,
                        progressBar = FALSE,
                        trace       = FALSE, ...) {
   kselection_fun(x,
-      fun_cluster = kmeans,
+      fun_cluster = stats::kmeans,
       max_centers = max_centers,
       k_threshold = k_threshold,
-      nstart = 25,
       progressBar = progressBar,
       trace = trace,
+      nstart = nstart,
       ...)
 }
 
