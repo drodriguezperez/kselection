@@ -219,19 +219,19 @@ kselection_fun <- function(x,
 #' \begin{array}{rl}
 #'  1 - \frac{3}{4 N_d}                        & \mbox{if $K = 1$ and $N_d > 1$} \\
 #'  \alpha_{K-1} + \frac{1 - \alpha_{K-1}}{6}  & \mbox{if $K > 2$ and $N_d > 1$}
-#' \end{array} \right.}{\alpha_K = 
+#' \end{array} \right.}{\alpha_K =
 #'  1 - 3/(4 * N_d), if K = 1 and N_d > 1;
 #'  \alpha_{K-1} + (1 - \alpha_{K-1})/6, if K > 2 and N_d > 1}
 #' where \eqn{N_d} is the number of dimensions of the data set.
-#' 
+#'
 #' In this definition \eqn{f(K)} is the ratio of the real distortion to the
 #' estimated distortion and decreases when there are areas of concentration in
 #' the data distribution.
-#' 
+#'
 #' The values of \eqn{K} that yield \eqn{f(K) < 0.85} can be recommended for
 #' clustering. If there is not a value of \eqn{K} which \eqn{f(K) < 0.85}, it
 #' cannot be considered the existence of clusters in the data set.
-#' 
+#'
 #' @examples
 #' # Create a data set with two clusters
 #' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
@@ -239,24 +239,24 @@ kselection_fun <- function(x,
 #'
 #' # Ejecute the method
 #' sol <- kselection(dat)
-#' 
+#'
 #' # Get the results
 #' k   <- num_clusters(sol) # optimal number of clustes
 #' f_k <- get_f_k(sol)      # the f(K) vector
-#' 
+#'
 #' # Plot the results
 #' plot(sol)
-#' 
+#'
 #' @author Daniel Rodriguez Perez
-#' 
+#'
 #' @references
 #' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
 #' Mechanical Engineering Science, 2004, pp. 103-119.
-#' 
+#'
 #' @seealso \code{\link{kselection_fun}}, \code{\link{num_clusters}}, \code{\link{get_f_k}}
-#' 
+#'
 #' @import tools
-#' 
+#'
 #' @rdname kselection
 #' @export kselection
 kselection <- function(x,
@@ -277,18 +277,18 @@ kselection <- function(x,
 
 
 #' Get the \code{k_threshold}
-#' 
+#'
 #' Get the maximum value of \eqn{f(K)} from which can not be considered the
 #' existence of more than one cluster.
-#' 
+#'
 #' @param obj the output of \code{kselection} function.
-#' 
+#'
 #' @return the \code{k_threshold} value.
-#' 
+#'
 #' @author Daniel Rodriguez Perez
-#' 
+#'
 #' @seealso \code{\link{set_k_threshold}}
-#' 
+#'
 #' @rdname get_k_threshold
 #' @export get_k_threshold
 get_k_threshold <- function(obj) {
