@@ -13,5 +13,5 @@ BugReports: https://github.com/drodriguezperez/kselection/issues
 Imports:
     tools
 Suggests:
-    testthat
+    amap, LICORS, testthat
 Roxygen: list(wrap = FALSE)

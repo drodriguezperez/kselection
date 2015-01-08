@@ -29,7 +29,13 @@ test_that("evaluate with amap", {
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
                 rnorm(100, 1, .1), rnorm(100, -3, .1),
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
-  k <- kselection(x, fun_cluster = amap::Kmeans)
+  
+  k <- kselection(x,
+                  fun_cluster = function(x, k, nstart, ...) {
+                    result              <- amap::Kmeans(x, k, nstart = nstart)
+                    result$tot.withinss <- sum(result$withinss)
+                    result
+                  })
   
   expect_that(num_clusters(x), is_null())
   expect_that(num_clusters_all(x), is_null())
