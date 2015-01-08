@@ -138,7 +138,7 @@ kselection <- function(x,
   
   for (k in 1:max_centers) {
     mod_info <- fun_cluster(x, k, nstart = nstart, ...)
-    s_k[k]   <- mod_info$tot.withinss
+    s_k[k]   <- sum(mod_info$withinss)
     
     if (k == 1) {
       f_k[k] <- 1  
