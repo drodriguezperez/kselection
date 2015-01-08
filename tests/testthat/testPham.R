@@ -22,6 +22,7 @@
 context("Tests for kselection")
 
 test_that("evaluate k_threshold getter and setters", {
+  set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
   k <- kselection(x)
@@ -89,12 +90,13 @@ test_that("evaluate invalid inputs values", {
 
 test_that("evaluate invalid inputs to kselection_fun", {
   test_data    <- as.matrix(1:300, 100, 3)
-  expect_that(kselection_fun(test_data, fun_cluster = "string"),
+  expect_that(kselection(test_data, fun_cluster = "string"),
               throws_error("'fun_cluster' must be a function."))
 
 })
 
 test_that("evaluate the solution", {
+  set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
   k <- kselection(x)
@@ -119,6 +121,7 @@ test_that("evaluate the solution", {
 })
 
 test_that("evaluate the solution with four clusters", {
+  set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
                 rnorm(100, 1, .1), rnorm(100, -3, .1),

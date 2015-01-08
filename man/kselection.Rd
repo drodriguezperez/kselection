@@ -4,12 +4,17 @@
 \alias{kselection}
 \title{Selection of K in K-means Clustering}
 \usage{
-kselection(x, max_centers = 15, k_threshold = 0.85, nstart = 25,
-  progressBar = FALSE, trace = FALSE, ...)
+kselection(x, fun_cluster = stats::kmeans, max_centers = 15,
+  k_threshold = 0.85, nstart = 25, progressBar = FALSE, trace = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
 matrix.}
+
+\item{fun_cluster}{function to cluster by (e.g. \code{kmeans}). The function
+must have a named attribute \code{tot.withss} which is a numeric with
+one value, the sum of the total within sum of squaresvector}
 
 \item{max_centers}{maximum number of clusters for evaluation.}
 
@@ -24,20 +29,13 @@ method.}
 
 \item{trace}{display a trace of the progress.}
 
-\item{...}{arguments to be passed to the \code{kmeans} method.}
-
-\item{fun_cluster}{function to cluster by (e.g. \code{kmeans}). The function
-must have a named attribute \code{tot.withss} which is a numeric with one
-value, the sum of the total within sum of squaresvector}
+\item{...}{arguments to be passed to the kmeans method.}
 }
 \value{
 an object with the \eqn{f(K)} results.
 }
 \description{
-Selection of k in k-means clustering based on Pham et al. paper using the
-default implementation of k-means (\code{stats::kmeans}). For a generalized
-version that accepts any implementation of k-means, see
-\code{kselection::kselection_fun}.
+Selection of k in k-means clustering based on Pham et al. paper.
 }
 \details{
 This function implements the method proposed by Pham, Dimov and Nguyen for
@@ -96,6 +94,6 @@ D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
 Mechanical Engineering Science, 2004, pp. 103-119.
 }
 \seealso{
-\code{\link{kselection_fun}}, \code{\link{num_clusters}}, \code{\link{get_f_k}}
+\code{\link{num_clusters}}, \code{\link{get_f_k}}
 }
 

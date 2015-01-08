@@ -19,169 +19,15 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>
 ##
 
-#' Selection of K in Generalized K-means Clustering
-#'
-#' Selection of k in k-means clustering based on Pham et al. paper. This
-#' version is generalized to use any implementation of k-means. For a simpler
-#' version that uses \code{stats::kmeans}, use \code{kselection::kselection}.
-#'
-#' @param x numeric matrix of data, or an object that can be coerced to such a
-#'        matrix.
-#' @param fun_cluster function to cluster by (e.g. \code{kmeans}). The function
-#' must have a named attribute \code{tot.withss} which is a numeric with one
-#' value, the sum of the total within sum of squaresvector
-#' @param max_centers maximum number of clusters for evaluation.
-#' @param k_threshold maximum value of \eqn{f(K)} from which can not be
-#'        considered the existence of more than one cluster in the data set.
-#'        The default value is 0.85.
-#' @param progressBar show a progress bar.
-#' @param trace display a trace of the progress.
-#' @param ... arguments to be passed to the \code{fun_cluster} method.
-#'
-#' @return an object with the \eqn{f(K)} results.
-#'
-#' @details
-#' This function implements the method proposed by Pham, Dimov and Nguyen for
-#' selecting the number of clusters for the K-means algorithm. In this method
-#' a function \eqn{f(K)} is used to evaluate the quality of the resulting
-#' clustering and help decide on the optimal value of \eqn{K} for each data
-#' set. The \eqn{f(K)} function is defined as
-#' \deqn{f(K) = \left\{
-#' \begin{array}{rl}
-#'  1 & \mbox{if $K = 1$} \\
-#'  \frac{S_K}{\alpha_K S_{K-1}} & \mbox{if $S_{K-1} \ne 0$, $\forall K >1$} \\
-#'  1 & \mbox{if $S_{K-1} = 0$, $\forall K >1$}
-#' \end{array} \right.}{f(K) =
-#'  1, if K = 1;
-#'  (S_K)/(\alpha_K S_{K-1}, if S_{K-1} \ne 0, forall K >1;
-#'  1, if S_{K-1} = 0, forall K > 1}
-#' where \eqn{S_K} is the sum of the distortion of all cluster and \eqn{\alpha_K}
-#' is a weight factor which is defined as
-#' \deqn{\alpha_K = \left\{
-#' \begin{array}{rl}
-#'  1 - \frac{3}{4 N_d}                        & \mbox{if $K = 1$ and $N_d > 1$} \\
-#'  \alpha_{K-1} + \frac{1 - \alpha_{K-1}}{6}  & \mbox{if $K > 2$ and $N_d > 1$}
-#' \end{array} \right.}{\alpha_K =
-#'  1 - 3/(4 * N_d), if K = 1 and N_d > 1;
-#'  \alpha_{K-1} + (1 - \alpha_{K-1})/6, if K > 2 and N_d > 1}
-#' where \eqn{N_d} is the number of dimensions of the data set.
-#'
-#' In this definition \eqn{f(K)} is the ratio of the real distortion to the
-#' estimated distortion and decreases when there are areas of concentration in
-#' the data distribution.
-#'
-#' The values of \eqn{K} that yield \eqn{f(K) < 0.85} can be recommended for
-#' clustering. If there is not a value of \eqn{K} which \eqn{f(K) < 0.85}, it
-#' cannot be considered the existence of clusters in the data set.
-#'
-#' @examples
-#' # Create a data set with two clusters
-#' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
-#'                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
-#'
-#' # Execute the method
-#' sol <- kselection_fun(dat, kmeans, nstart = 25)
-#'
-#' # Get the results
-#' k   <- num_clusters(sol) # optimal number of clustes
-#' f_k <- get_f_k(sol)      # the f(K) vector
-#'
-#' # Plot the results
-#' plot(sol)
-#' 
-#' @author Daniel Rodriguez
-#' 
-#' @references
-#' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
-#' Mechanical Engineering Science, 2004, pp. 103-119.
-#'
-#' @seealso \code{\link{kselection}}, \code{\link{num_clusters}}, \code{\link{get_f_k}}
-#'
-#' @import tools
-#'
-#' @rdname kselection_fun
-#' @export kselection_fun
-kselection_fun <- function(x,
-                       fun_cluster,
-                       max_centers = 15,
-                       k_threshold = 0.85,
-                       progressBar = FALSE,
-                       trace       = FALSE, ...) {
-  if (!is.function(fun_cluster))
-    stop("'fun_cluster' must be a function.")
-
-  if (max_centers < 2)
-    stop("'max_centers' must be greater than 2")
-
-  x <- as.matrix(x)
-  if (!is.numeric(x))
-    stop('x must contain numerical data')
-
-  num_row <- dim(x)[1]
-  num_col <- dim(x)[2]
-
-  if (num_row <= max_centers) {
-    warning('The maximum number of clusters has been reduced from ', max_centers, ' to ', num_row - 1)
-    max_centers <- num_row - 1
-  }
-
-  f_k <- rep(1, max_centers)
-  s_k <- rep(1, max_centers)
-  a_k <- alpha_k(num_col, max_centers)
-
-  if (progressBar) {
-    pb <- txtProgressBar(min   = 0,
-                         max   = max_centers,
-                         style = 3)
-  }
-
-  for (k in 1:max_centers) {
-    mod_info <- fun_cluster(x,
-                       k,
-                       ...)
-    s_k[k]   <- mod_info$tot.withinss
-
-    if (k == 1) {
-      f_k[k] <- 1
-    } else {
-      if (s_k[k - 1] == 0) {
-        f_k[k] <- 1
-      } else {
-        f_k[k] <- s_k[k]  / (a_k[k] * s_k[k - 1])
-      }
-    }
-
-    if (trace) {
-      message('Number of clusters', k,' - f(k) = ', f_k[k])
-    }
-
-    if (progressBar) {
-      setTxtProgressBar(pb, k)
-    }
-  }
-
-  result <- list(k           = which_cluster(f_k, k_threshold),
-                 f_k         = f_k,
-                 max_centers = max_centers,
-                 k_threshold = k_threshold,
-                 fun_cluster = fun_cluster)
-  class(result) <- 'Kselection'
-
-  result
-}
-
 #' Selection of K in K-means Clustering
-#'
-#' Selection of k in k-means clustering based on Pham et al. paper using the
-#' default implementation of k-means (\code{stats::kmeans}). For a generalized
-#' version that accepts any implementation of k-means, see
-#' \code{kselection::kselection_fun}.
-#'
+#' 
+#' Selection of k in k-means clustering based on Pham et al. paper.
+#' 
 #' @param x numeric matrix of data, or an object that can be coerced to such a
 #'        matrix.
 #' @param fun_cluster function to cluster by (e.g. \code{kmeans}). The function
-#' must have a named attribute \code{tot.withss} which is a numeric with one
-#' value, the sum of the total within sum of squaresvector
+#'        must have a named attribute \code{tot.withss} which is a numeric with
+#'        one value, the sum of the total within sum of squaresvector
 #' @param max_centers maximum number of clusters for evaluation.
 #' @param k_threshold maximum value of \eqn{f(K)} from which can not be
 #'        considered the existence of more than one cluster in the data set.
@@ -190,10 +36,10 @@ kselection_fun <- function(x,
 #'        method.
 #' @param progressBar show a progress bar.
 #' @param trace display a trace of the progress.
-#' @param ... arguments to be passed to the \code{kmeans} method.
-#'
+#' @param ... arguments to be passed to the kmeans method.
+#' 
 #' @return an object with the \eqn{f(K)} results.
-#'
+#' 
 #' @details
 #' This function implements the method proposed by Pham, Dimov and Nguyen for
 #' selecting the number of clusters for the K-means algorithm. In this method
@@ -215,19 +61,19 @@ kselection_fun <- function(x,
 #' \begin{array}{rl}
 #'  1 - \frac{3}{4 N_d}                        & \mbox{if $K = 1$ and $N_d > 1$} \\
 #'  \alpha_{K-1} + \frac{1 - \alpha_{K-1}}{6}  & \mbox{if $K > 2$ and $N_d > 1$}
-#' \end{array} \right.}{\alpha_K =
+#' \end{array} \right.}{\alpha_K = 
 #'  1 - 3/(4 * N_d), if K = 1 and N_d > 1;
 #'  \alpha_{K-1} + (1 - \alpha_{K-1})/6, if K > 2 and N_d > 1}
 #' where \eqn{N_d} is the number of dimensions of the data set.
-#'
+#' 
 #' In this definition \eqn{f(K)} is the ratio of the real distortion to the
 #' estimated distortion and decreases when there are areas of concentration in
 #' the data distribution.
-#'
+#' 
 #' The values of \eqn{K} that yield \eqn{f(K) < 0.85} can be recommended for
 #' clustering. If there is not a value of \eqn{K} which \eqn{f(K) < 0.85}, it
 #' cannot be considered the existence of clusters in the data set.
-#'
+#' 
 #' @examples
 #' # Create a data set with two clusters
 #' dat <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
@@ -235,42 +81,93 @@ kselection_fun <- function(x,
 #'
 #' # Execute the method
 #' sol <- kselection(dat)
-#'
+#' 
 #' # Get the results
 #' k   <- num_clusters(sol) # optimal number of clustes
 #' f_k <- get_f_k(sol)      # the f(K) vector
-#'
+#' 
 #' # Plot the results
 #' plot(sol)
-#'
-#' @author Daniel Rodriguez Perez
-#'
+#' 
+#' @author Daniel Rodriguez
+#' 
 #' @references
 #' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
 #' Mechanical Engineering Science, 2004, pp. 103-119.
-#'
-#' @seealso \code{\link{kselection_fun}}, \code{\link{num_clusters}}, \code{\link{get_f_k}}
-#'
+#' 
+#' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
+#' 
 #' @import tools
-#'
+#' 
 #' @rdname kselection
 #' @export kselection
 kselection <- function(x,
+                       fun_cluster = stats::kmeans,
                        max_centers = 15,
                        k_threshold = 0.85,
                        nstart      = 25,
                        progressBar = FALSE,
                        trace       = FALSE, ...) {
-  kselection_fun(x,
-      fun_cluster = stats::kmeans,
-      max_centers = max_centers,
-      k_threshold = k_threshold,
-      progressBar = progressBar,
-      trace = trace,
-      nstart = nstart,
-      ...)
+  if (!is.function(fun_cluster))
+    stop("'fun_cluster' must be a function.")
+  
+  if (max_centers < 2)
+    stop("'max_centers' must be greater than 2")
+  
+  x <- as.matrix(x)
+  if (!is.numeric(x)) 
+    stop('x must contain numerical data')
+  
+  num_row <- dim(x)[1]
+  num_col <- dim(x)[2]
+  
+  if (num_row <= max_centers) {
+    warning('The maximum number of clusters has been reduced from ', max_centers, ' to ', num_row - 1)
+    max_centers <- num_row - 1
+  } 
+  
+  f_k <- rep(1, max_centers)
+  s_k <- rep(1, max_centers)
+  a_k <- alpha_k(num_col, max_centers)
+  
+  if (progressBar) {
+    pb <- txtProgressBar(min   = 0,
+                         max   = max_centers,
+                         style = 3)
+  }
+  
+  for (k in 1:max_centers) {
+    mod_info <- fun_cluster(x, k, ...)
+    s_k[k]   <- mod_info$tot.withinss
+    
+    if (k == 1) {
+      f_k[k] <- 1  
+    } else {
+      if (s_k[k - 1] == 0) {
+        f_k[k] <- 1
+      } else {
+        f_k[k] <- s_k[k]  / (a_k[k] * s_k[k - 1])
+      }      
+    }
+    
+    if (trace) {
+      message('Number of clusters', k,' - f(k) = ', f_k[k])
+    }
+    
+    if (progressBar) {
+      setTxtProgressBar(pb, k)
+    }
+  }
+  
+  result <- list(k           = which_cluster(f_k, k_threshold),
+                 f_k         = f_k,
+                 max_centers = max_centers,
+                 k_threshold = k_threshold,
+                 fun_cluster = fun_cluster)
+  class(result) <- 'Kselection'
+  
+  return(result)
 }
-
 
 #' Get the \code{k_threshold}
 #'
