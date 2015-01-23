@@ -32,8 +32,6 @@
 #' @param k_threshold maximum value of \eqn{f(K)} from which can not be
 #'        considered the existence of more than one cluster in the data set.
 #'        The default value is 0.85.
-#' @param nstart the number of random sets that should be chosen in the kmeans
-#'        method.
 #' @param progressBar show a progress bar.
 #' @param trace display a trace of the progress.
 #' @param ... arguments to be passed to the kmeans method.
@@ -105,7 +103,6 @@ kselection <- function(x,
                        fun_cluster = stats::kmeans,
                        max_centers = 15,
                        k_threshold = 0.85,
-                       nstart      = 25,
                        progressBar = FALSE,
                        trace       = FALSE, ...) {
   if (!is.function(fun_cluster))
@@ -137,7 +134,7 @@ kselection <- function(x,
   }
   
   for (k in 1:max_centers) {
-    mod_info <- fun_cluster(x, k, nstart = nstart, ...)
+    mod_info <- fun_cluster(x, k, ...)
     s_k[k]   <- sum(mod_info$withinss)
     
     if (k == 1) {

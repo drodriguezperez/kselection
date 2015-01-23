@@ -5,8 +5,7 @@
 \title{Selection of K in K-means Clustering}
 \usage{
 kselection(x, fun_cluster = stats::kmeans, max_centers = 15,
-  k_threshold = 0.85, nstart = 25, progressBar = FALSE, trace = FALSE,
-  ...)
+  k_threshold = 0.85, progressBar = FALSE, trace = FALSE, ...)
 }
 \arguments{
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
@@ -21,9 +20,6 @@ one value, the sum of the total within sum of squaresvector}
 \item{k_threshold}{maximum value of \eqn{f(K)} from which can not be
 considered the existence of more than one cluster in the data set.
 The default value is 0.85.}
-
-\item{nstart}{the number of random sets that should be chosen in the kmeans
-method.}
 
 \item{progressBar}{show a progress bar.}
 

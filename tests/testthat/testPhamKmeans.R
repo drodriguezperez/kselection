@@ -29,7 +29,7 @@ test_that("evaluate with amap", {
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
                 rnorm(100, 1, .1), rnorm(100, -3, .1),
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
-  k <- kselection(x, fun_cluster = amap::Kmeans)
+  k <- kselection(x, fun_cluster = amap::Kmeans, nstart = 10)
   
   expect_that(num_clusters(x), is_null())
   expect_that(num_clusters_all(x), is_null())
@@ -58,7 +58,7 @@ test_that("evaluate with FactoClass", {
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
                 rnorm(100, 1, .1), rnorm(100, -3, .1),
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
-  k <- kselection(x, fun_cluster = FactoClass::kmeansW)
+  k <- kselection(x, fun_cluster = FactoClass::kmeansW, nstart = 10)
   
   expect_that(num_clusters(x), is_null())
   expect_that(num_clusters_all(x), is_null())
@@ -87,7 +87,7 @@ test_that("evaluate with LICORS", {
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
                 rnorm(100, 1, .1), rnorm(100, -3, .1),
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
-  k <- kselection(x, fun_cluster = LICORS::kmeanspp)
+  k <- kselection(x, fun_cluster = LICORS::kmeanspp, nstart = 10)
   
   expect_that(num_clusters(x), is_null())
   expect_that(num_clusters_all(x), is_null())
