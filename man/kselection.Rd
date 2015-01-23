@@ -5,15 +5,16 @@
 \title{Selection of K in K-means Clustering}
 \usage{
 kselection(x, fun_cluster = stats::kmeans, max_centers = 15,
-  k_threshold = 0.85, progressBar = FALSE, trace = FALSE, ...)
+  k_threshold = 0.85, progressBar = FALSE, trace = FALSE,
+  parallel = FALSE, ...)
 }
 \arguments{
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
 matrix.}
 
 \item{fun_cluster}{function to cluster by (e.g. \code{kmeans}). The function
-must have a named attribute \code{tot.withss} which is a numeric with
-one value, the sum of the total within sum of squaresvector}
+must have a named attribute \code{withinss} which is a numeric vector
+with the within.}
 
 \item{max_centers}{maximum number of clusters for evaluation.}
 
@@ -24,6 +25,11 @@ The default value is 0.85.}
 \item{progressBar}{show a progress bar.}
 
 \item{trace}{display a trace of the progress.}
+
+\item{parallel}{If set to true, use parallel \code{foreach} to execute the
+function that implements the kmeans algorithm. Must register parallel
+before hand, such as \code{doMC} or others. Selecting this option the
+progress bar is disabled.}
 
 \item{...}{arguments to be passed to the kmeans method.}
 }

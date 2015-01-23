@@ -26,14 +26,18 @@
 #' @param x numeric matrix of data, or an object that can be coerced to such a
 #'        matrix.
 #' @param fun_cluster function to cluster by (e.g. \code{kmeans}). The function
-#'        must have a named attribute \code{tot.withss} which is a numeric with
-#'        one value, the sum of the total within sum of squaresvector
+#'        must have a named attribute \code{withinss} which is a numeric vector
+#'        with the within.
 #' @param max_centers maximum number of clusters for evaluation.
 #' @param k_threshold maximum value of \eqn{f(K)} from which can not be
 #'        considered the existence of more than one cluster in the data set.
 #'        The default value is 0.85.
 #' @param progressBar show a progress bar.
 #' @param trace display a trace of the progress.
+#' @param parallel If set to true, use parallel \code{foreach} to execute the
+#'        function that implements the kmeans algorithm. Must register parallel
+#'        before hand, such as \code{doMC} or others. Selecting this option the
+#'        progress bar is disabled.
 #' @param ... arguments to be passed to the kmeans method.
 #' 
 #' @return an object with the \eqn{f(K)} results.
@@ -104,7 +108,8 @@ kselection <- function(x,
                        max_centers = 15,
                        k_threshold = 0.85,
                        progressBar = FALSE,
-                       trace       = FALSE, ...) {
+                       trace       = FALSE,
+                       parallel    = FALSE, ...) {
   if (!is.function(fun_cluster))
     stop("'fun_cluster' must be a function.")
   
@@ -127,16 +132,29 @@ kselection <- function(x,
   s_k <- rep(1, max_centers)
   a_k <- alpha_k(num_col, max_centers)
   
-  if (progressBar) {
-    pb <- txtProgressBar(min   = 0,
-                         max   = max_centers,
-                         style = 3)
+  if (parallel && require(foreach)) {
+    s_k = foreach(k = 1:max_centers, .combine = c) %dopar% {
+      mod_info <- fun_cluster(x, k, ...)
+      s_k      <- sum(mod_info$withinss)
+    }
+  } else {
+    if (progressBar) {
+      pb <- txtProgressBar(min   = 0,
+                           max   = max_centers,
+                           style = 3)
+    }
+    
+    for (k in 1:max_centers) {
+      mod_info <- fun_cluster(x, k, ...)
+      s_k[k]   <- sum(mod_info$withinss)
+      
+      if (progressBar) {
+        setTxtProgressBar(pb, k)
+      }
+    }
   }
   
-  for (k in 1:max_centers) {
-    mod_info <- fun_cluster(x, k, ...)
-    s_k[k]   <- sum(mod_info$withinss)
-    
+  for (k in 1:max_centers) {    
     if (k == 1) {
       f_k[k] <- 1  
     } else {
@@ -149,10 +167,6 @@ kselection <- function(x,
     
     if (trace) {
       message('Number of clusters', k,' - f(k) = ', f_k[k])
-    }
-    
-    if (progressBar) {
-      setTxtProgressBar(pb, k)
     }
   }
   
