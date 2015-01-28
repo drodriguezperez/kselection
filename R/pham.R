@@ -116,6 +116,21 @@ kselection <- function(x,
   if (max_centers < 2)
     stop("'max_centers' must be greater than 2")
   
+  if (!is.logical(progressBar)) {
+    progressBar <- FALSE
+    warning("'progressBar' must be a logical")
+  }
+  
+  if (!is.logical(trace)) {
+    trace <- FALSE
+    warning("'trace' must be a logical")
+  }
+  
+  if (!is.logical(parallel)) {
+    parallel <- FALSE
+    warning("'parallel' must be a logical")  
+  }
+  
   x <- as.matrix(x)
   if (!is.numeric(x)) 
     stop('x must contain numerical data')

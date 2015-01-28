@@ -86,13 +86,25 @@ test_that("evaluate invalid inputs values", {
   test_data$V3 <- 'a'
   expect_that(kselection(test_data), 
               throws_error('x must contain numerical data'))
+  
+  x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+                rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+  expect_that(kselection(x, fun_cluster = "string"),
+              throws_error("'fun_cluster' must be a function."))
 })
 
-test_that("evaluate invalid inputs to kselection_fun", {
-  test_data    <- as.matrix(1:300, 100, 3)
-  expect_that(kselection(test_data, fun_cluster = "string"),
-              throws_error("'fun_cluster' must be a function."))
-
+test_that("evaluate warning in input values", {
+  x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
+                rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
+  
+  expect_that(kselection(x, progressBar = "string"),
+              gives_warning("'progressBar' must be a logical"))
+  
+  expect_that(kselection(x, trace = "string"),
+              gives_warning("'trace' must be a logical"))
+  
+  expect_that(kselection(x, parallel = "string"),
+              gives_warning("'parallel' must be a logical"))
 })
 
 test_that("evaluate the solution", {
