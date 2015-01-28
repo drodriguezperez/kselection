@@ -12,9 +12,10 @@ kselection(x, fun_cluster = stats::kmeans, max_centers = 15,
 \item{x}{numeric matrix of data, or an object that can be coerced to such a
 matrix.}
 
-\item{fun_cluster}{function to cluster by (e.g. \code{kmeans}). The function
-must have a named attribute \code{withinss} which is a numeric vector
-with the within.}
+\item{fun_cluster}{function to cluster by (e.g. \code{kmeans}). The first
+parameter of the function must a numeric matrix and the second the
+number of clusters. The function must return an object with a named
+attribute \code{withinss} which is a numeric vector with the within.}
 
 \item{max_centers}{maximum number of clusters for evaluation.}
 
@@ -87,6 +88,15 @@ f_k <- get_f_k(sol)      # the f(K) vector
 
 # Plot the results
 plot(sol)
+
+\dontrun{
+# Parallel
+require(doMC)
+registerDoMC(cores = 4)
+
+system.time(kselection(dat, max_centers = 50 , nstart = 25))
+system.time(kselection(dat, max_centers = 50 , nstart = 25, parallel = TRUE))
+}
 }
 \author{
 Daniel Rodriguez

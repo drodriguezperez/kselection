@@ -25,9 +25,10 @@
 #' 
 #' @param x numeric matrix of data, or an object that can be coerced to such a
 #'        matrix.
-#' @param fun_cluster function to cluster by (e.g. \code{kmeans}). The function
-#'        must have a named attribute \code{withinss} which is a numeric vector
-#'        with the within.
+#' @param fun_cluster function to cluster by (e.g. \code{kmeans}). The first 
+#'        parameter of the function must a numeric matrix and the second the
+#'        number of clusters. The function must return an object with a named
+#'        attribute \code{withinss} which is a numeric vector with the within.
 #' @param max_centers maximum number of clusters for evaluation.
 #' @param k_threshold maximum value of \eqn{f(K)} from which can not be
 #'        considered the existence of more than one cluster in the data set.
@@ -90,6 +91,15 @@
 #' 
 #' # Plot the results
 #' plot(sol)
+#' 
+#' \dontrun{
+#' # Parallel
+#' require(doMC)
+#' registerDoMC(cores = 4)
+#' 
+#' system.time(kselection(dat, max_centers = 50 , nstart = 25))
+#' system.time(kselection(dat, max_centers = 50 , nstart = 25, parallel = TRUE))
+#' }
 #' 
 #' @author Daniel Rodriguez
 #' 

@@ -11,8 +11,8 @@ License: GPL-3
 URL: https://github.com/drodriguezperez/kselection
 BugReports: https://github.com/drodriguezperez/kselection/issues
 Imports:
-    foreach,
     tools
 Suggests:
+    foreach,
     testthat
 Roxygen: list(wrap = FALSE)
