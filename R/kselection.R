@@ -10,7 +10,7 @@
 #' 
 #' \tabular{ll}{
 #'   Package: \tab kselection \cr
-#'   Version: \tab 0.1.1 \cr
+#'   Version: \tab 0.2.0 \cr
 #'   License: \tab GPL-3 \cr
 #' }
 #'
