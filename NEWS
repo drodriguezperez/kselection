@@ -1,6 +1,6 @@
 kselection 0.2.0
 --------------------------------------------------------------------------------
-* `kselection` allows to inject a function that provides a different implementation of kmeans algorithm. Thanks to Harold Pimentel.
+* `kselection` allows to inject a function that provides a different implementation of kmeans algorithm. This feature has developed thanks Harold Pimentel.
 * `nstart` is not a parameter of `kselection` to facilitate compatibility with different implementations of kmeans algorithm.
 * `kselection` allows the parallel execution of the algorithm using `foreach` package.
 

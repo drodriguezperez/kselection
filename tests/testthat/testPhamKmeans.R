@@ -24,6 +24,9 @@ context("Tests for kselection with other kmeans functions")
 test_that("evaluate with amap", {
   skip_on_cran()
   
+  if (Sys.getenv('R_TESTS') != '')
+    skip('On build')
+  
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
@@ -53,6 +56,9 @@ test_that("evaluate with amap", {
 test_that("evaluate with FactoClass", {
   skip_on_cran()
   
+  if (Sys.getenv('R_TESTS') != '')
+    skip('On build')
+  
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
@@ -81,6 +87,9 @@ test_that("evaluate with FactoClass", {
 
 test_that("evaluate with LICORS", {
   skip_on_cran()
+  
+  if (Sys.getenv('R_TESTS') != '')
+    skip('On build')
   
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
