@@ -1,5 +1,5 @@
 ##
-##  Implementatión of the 2004 Pham et al. paper
+##  Implementation of the 2004 Pham et al. paper
 ##
 ##  Created by Daniel Rodriguez Perez on 6/9/2014.
 ##
