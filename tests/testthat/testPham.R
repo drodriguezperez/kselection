@@ -160,6 +160,8 @@ test_that("evaluate the solution with four clusters", {
 })
 
 test_that("evaluate the solution with four clusters and parallel", {
+  skip_on_cran()
+  
   if (!requireNamespace('foreach')) {
     skip('No foreach package')
   }
