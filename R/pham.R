@@ -1,9 +1,9 @@
 ##
-##  Implementation of the 2004 Pham et al. paper
+##  Implementatión of the 2004 Pham et al. paper
 ##
-##  Created by Daniel Rodríguez Pérez on 6/9/2014.
+##  Created by Daniel Rodriguez Perez on 6/9/2014.
 ##
-##  Copyright (c) 2014 Daniel Rodríguez Pérez.
+##  Copyright (c) 2014 Daniel Rodriguez Perez.
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -156,12 +156,13 @@ kselection <- function(x,
   f_k <- rep(1, max_centers)
   s_k <- rep(1, max_centers)
   a_k <- alpha_k(num_col, max_centers)
-  
-  if (parallel && require(foreach)) {
-    s_k = foreach(k = 1:max_centers, .combine = c) %dopar% {
-      mod_info <- fun_cluster(x, k, ...)
-      s_k      <- sum(mod_info$withinss)
-    }
+    
+  if (parallel && requireNamespace('foreach', quietly = TRUE)) {
+    s_k <- foreach::"%dopar%"(
+      foreach::foreach(k = 1:max_centers, .combine = c), {
+        mod_info <- fun_cluster(x, k, ...)
+        s_k      <- sum(mod_info$withinss)
+      })
   } else {
     if (progressBar) {
       pb <- txtProgressBar(min   = 0,
