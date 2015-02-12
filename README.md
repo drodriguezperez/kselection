@@ -34,3 +34,7 @@ plot(sol)
 ## References
 
 1. D T Pham, S S Dimov, and C D Nguyen "Selection of k in k-means clustering", Mechanical Engineering Science, 2004, pp. 103-119.
+
+# Acknowledgments
+
+I would like to thank Harold Pimentel for all of their helpful discussions during the develop of the package.

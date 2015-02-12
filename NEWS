@@ -1,6 +1,11 @@
+kselection 0.2.0
+--------------------------------------------------------------------------------
+* `kselection` allows to inject a function that provides a different implementation of kmeans algorithm. This feature has developed thanks Harold Pimentel.
+* `nstart` is not a parameter of `kselection` to facilitate compatibility with different implementations of kmeans algorithm.
+* `kselection` allows the parallel execution of the algorithm using `foreach` package.
+
 kselection 0.1.1
 --------------------------------------------------------------------------------
-
-* BREAKING CHANGE: Now the `trace`option in the `kselection` function shows a trace, the progres must be selected using the `progressBar` option
+* BREAKING CHANGE: Now the `trace`option in the `kselection` function shows a trace, the progres must be selected using the `progressBar` option.
 * Add the possibility that `kselection` function display a trace of the progress.
 * Fix the error which appears in `kselection` when the number of rows in the input data is lower than 15.

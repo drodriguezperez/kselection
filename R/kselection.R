@@ -1,4 +1,4 @@
-#' Selection of k in k-means clustering
+#' Selection of K in K-Means Clustering
 #'
 #' Selection of k in k-means clustering based on Pham et al. paper ``Selection
 #' of k in k-means clustering''
@@ -10,11 +10,11 @@
 #' 
 #' \tabular{ll}{
 #'   Package: \tab kselection \cr
-#'   Version: \tab 0.1.1 \cr
+#'   Version: \tab 0.2.0 \cr
 #'   License: \tab GPL-3 \cr
 #' }
 #'
-#' @author Daniel Rodriguez Perez \email{daniel.rodriguez.perez@@gmail.com}
+#' @author Daniel Rodriguez \email{daniel.rodriguez.perez@@gmail.com}
 #' 
 #' @references
 #' D T Pham, S S Dimov, and C D Nguyen, "Selection of k in k-means clustering",
