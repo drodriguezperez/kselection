@@ -1,9 +1,9 @@
 ##
 ##  Unit testing file
 ##
-##  Created by Daniel Rodríguez Pérez on 7/12/2014.
+##  Created by Daniel Rodriguez Perez on 7/12/2014.
 ##
-##  Copyright (c) 2014 Daniel Rodríguez Pérez.
+##  Copyright (c) 2014 Daniel Rodriguez Perez.
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by

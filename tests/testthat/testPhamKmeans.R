@@ -1,9 +1,9 @@
 ##
 ##  kselection tests with other kmeans function
 ##
-##  Created by Daniel Rodríguez Pérez on 8/1/2015.
+##  Created by Daniel Rodriguez Perez on 8/1/2015.
 ##
-##  Copyright (c) 2015 Daniel Rodríguez Pérez.
+##  Copyright (c) 2015 Daniel Rodriguez Perez.
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,9 @@ context("Tests for kselection with other kmeans functions")
 test_that("evaluate with amap", {
   skip_on_cran()
   
-  if (Sys.getenv('R_TESTS') != '')
-    skip('On build')
+  if (!requireNamespace('amap')) {
+    skip('No amap package')
+  }
   
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
@@ -56,8 +57,9 @@ test_that("evaluate with amap", {
 test_that("evaluate with FactoClass", {
   skip_on_cran()
   
-  if (Sys.getenv('R_TESTS') != '')
-    skip('On build')
+  if (!requireNamespace('FactoClass')) {
+    skip('No FactoClass package')
+  }
   
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
@@ -88,8 +90,9 @@ test_that("evaluate with FactoClass", {
 test_that("evaluate with LICORS", {
   skip_on_cran()
   
-  if (Sys.getenv('R_TESTS') != '')
-    skip('On build')
+  if (!requireNamespace('LICORS')) {
+    skip('No LICORS package')
+  }
   
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),

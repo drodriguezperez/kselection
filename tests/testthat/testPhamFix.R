@@ -1,9 +1,9 @@
 ##
 ##  Test previous errors on kselection
 ##
-##  Created by Daniel Rodríguez Pérez on 10/10/2014.
+##  Created by Daniel Rodriguez Perez on 10/10/2014.
 ##
-##  Copyright (c) 2014 Daniel Rodríguez Pérez.
+##  Copyright (c) 2014 Daniel Rodriguez Perez.
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by

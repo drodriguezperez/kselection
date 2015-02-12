@@ -1,9 +1,9 @@
 ##
 ##  kselection tests
 ##
-##  Created by Daniel Rodríguez Pérez on 6/9/2014.
+##  Created by Daniel Rodriguez Perez on 6/9/2014.
 ##
-##  Copyright (c) 2014 Daniel Rodríguez Pérez.
+##  Copyright (c) 2014 Daniel Rodriguez Perez.
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -160,6 +160,12 @@ test_that("evaluate the solution with four clusters", {
 })
 
 test_that("evaluate the solution with four clusters and parallel", {
+  skip_on_cran()
+  
+  if (!requireNamespace('foreach')) {
+    skip('No foreach package')
+  }
+  
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
