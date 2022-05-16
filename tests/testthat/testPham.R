@@ -27,7 +27,7 @@ test_that("evaluate k_threshold getter and setters", {
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
   k <- kselection(x)
   
-  expect_that(get_k_threshold(x), is_null())
+  expect_null(get_k_threshold(x))
   expect_that(get_k_threshold(k), equals(0.85))
   
   expect_that(set_k_threshold(k, x), throws_error('k_threshold must be scalar'))
@@ -113,8 +113,8 @@ test_that("evaluate the solution", {
                 rnorm(100, -2, .1), rnorm(100, -3, .1)), 200, 2)
   k <- kselection(x, nstart = 15)
   
-  expect_that(num_clusters(x), is_null())
-  expect_that(num_clusters_all(x), is_null())
+  expect_null(num_clusters(x))
+  expect_null(num_clusters_all(x))
   
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(2))
@@ -140,8 +140,8 @@ test_that("evaluate the solution with four clusters", {
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
   k <- kselection(x)
   
-  expect_that(num_clusters(x), is_null())
-  expect_that(num_clusters_all(x), is_null())
+  expect_null(num_clusters(x))
+  expect_null(num_clusters_all(x))
   
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(4))
@@ -173,8 +173,8 @@ test_that("evaluate the solution with four clusters and parallel", {
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
   k <- kselection(x, parallel = TRUE, nstart = 15)
   
-  expect_that(num_clusters(x), is_null())
-  expect_that(num_clusters_all(x), is_null())
+  expect_null(num_clusters(x))
+  expect_null(num_clusters_all(x))
   
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(4))

@@ -1,8 +1,8 @@
 Package: kselection
 Type: Package
 Title: Selection of K in K-Means Clustering
-Version: 0.2.0
-Date: 2015-02-12
+Version: 0.2.1
+Date: 2022-05-16
 Author: Daniel Rodriguez
 Maintainer: Daniel Rodriguez <daniel.rodriguez.perez@gmail.com>
 Description: Selection of k in k-means clustering based on Pham et al. paper
@@ -16,6 +16,6 @@ Suggests:
     amap,
     FactoClass,
     foreach,
-    LICORS,
     testthat
-Roxygen: list(wrap = FALSE)
+Encoding: UTF-8
+RoxygenNote: 7.2.0
