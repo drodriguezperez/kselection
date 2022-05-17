@@ -25,7 +25,7 @@ test_that("evaluate data.frames with low rows", {
   x   <- matrix(c(rnorm(5, 2, .1), rnorm(5, 3, .1),
                   rnorm(5, -2, .1), rnorm(5, -3, .1)), 10, 2)
   
-  obj <- kselection(x)
+  obj <- kselection(x, max_centers = 9)
   expect_that(class(obj), equals("Kselection"))
   
   expect_warning(kselection(x),

@@ -110,6 +110,8 @@
 #' @seealso \code{\link{num_clusters}}, \code{\link{get_f_k}}
 #' 
 #' @import tools
+#' @importFrom utils setTxtProgressBar
+#' @importFrom utils txtProgressBar
 #' 
 #' @rdname kselection
 #' @export kselection
@@ -391,6 +393,10 @@ num_clusters_all.Kselection <- function(obj) {
 }
 
 #' @method plot Kselection
+#' 
+#' @importFrom graphics legend
+#' @importFrom graphics lines
+#' 
 #' @export
 plot.Kselection <- function(x, ...) {
   max_y   <- 1.1 * max(x$f_k)

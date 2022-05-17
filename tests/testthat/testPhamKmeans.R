@@ -27,16 +27,16 @@ test_that("evaluate with amap", {
   if (!requireNamespace('amap')) {
     skip('No amap package')
   }
-  
+
   set.seed(1000)
   x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
                 rnorm(100, -2, .1), rnorm(100, 1, .1),
                 rnorm(100, 1, .1), rnorm(100, -3, .1),
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
-  k <- kselection(x, fun_cluster = amap::Kmeans, nstart = 10)
+  k <- kselection(x, fun_cluster = amap::Kmeans, nstart = 4, iter.max = 20)
   
-  expect_that(num_clusters(x), is_null())
-  expect_that(num_clusters_all(x), is_null())
+  expect_null(num_clusters(x))
+  expect_null(num_clusters_all(x))
   
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(4))
@@ -68,41 +68,8 @@ test_that("evaluate with FactoClass", {
                 rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
   k <- kselection(x, fun_cluster = FactoClass::kmeansW, nstart = 10)
   
-  expect_that(num_clusters(x), is_null())
-  expect_that(num_clusters_all(x), is_null())
-  
-  expect_that(class(k), equals('Kselection'))
-  expect_that(k$k, equals(4))
-  expect_that(num_clusters(k), equals(4))
-  
-  valid_clusters <- which(get_f_k(k) < k$k_threshold)
-  expect_that(num_clusters_all(k), equals(valid_clusters))
-  
-  valid_clusters <- which(get_f_k(k) < 1)
-  k$k_threshold  <- 1
-  expect_that(num_clusters_all(k), equals(valid_clusters))
-  
-  valid_clusters <- which(get_f_k(k) < 0.1)
-  k$k_threshold  <- 0.1
-  expect_that(num_clusters_all(k), equals(valid_clusters))
-})
-
-test_that("evaluate with LICORS", {
-  skip_on_cran()
-  
-  if (!requireNamespace('LICORS')) {
-    skip('No LICORS package')
-  }
-  
-  set.seed(1000)
-  x <- matrix(c(rnorm(100, 2, .1), rnorm(100, 3, .1),
-                rnorm(100, -2, .1), rnorm(100, 1, .1),
-                rnorm(100, 1, .1), rnorm(100, -3, .1),
-                rnorm(100, -1, .1), rnorm(100, -2, .1)), 400, 2)
-  k <- kselection(x, fun_cluster = LICORS::kmeanspp, nstart = 10)
-  
-  expect_that(num_clusters(x), is_null())
-  expect_that(num_clusters_all(x), is_null())
+  expect_null(num_clusters(x))
+  expect_null(num_clusters_all(x))
   
   expect_that(class(k), equals('Kselection'))
   expect_that(k$k, equals(4))
